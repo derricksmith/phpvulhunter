@@ -4,13 +4,23 @@ require_once CURR_PATH . '/vendor/autoload.php';
 ini_set('xdebug.max_nesting_level', 2000);
 
 use PhpParser\Node;
-
 /**
  * 文件处理类
  * 
  * @author xyw55
  *        
  */
+ 
+class MyNodeVisitor extends PhpParser\NodeVisitorAbstract {
+    private $tokens;
+    public function setTokens(array $tokens) {
+        $this->tokens = $tokens;
+    }
+
+    
+	
+} 
+ 
 class FileUtils{
     /**
      *
@@ -64,31 +74,41 @@ class FileUtils{
     public static function mainFileFinder($dirpath){
         $files = self::getPHPfile($dirpath);
         $should2parser = array();
-        $parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative());      
+        //$parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative());      
+		
+		$lexer = new PhpParser\Lexer(array(
+			'usedAttributes' => array(
+				'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+			)
+		));
+		$parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
+		
         $traverser = new PhpParser\NodeTraverser();
-        $visitor = new VisitorForLine();
+        $visitor = new MyNodeVisitor();
         $traverser->addVisitor($visitor);
         foreach ($files as $file) {
             $code = file_get_contents($file);
             try {
                 $stmts = $parser->parse($code);
+				$visitor->setTokens($lexer->getTokens());
+				$stmts = $traverser->traverse($stmts);
             } catch (PhpParser\Error $e) {
                 continue ;
             }
             $traverser->traverse($stmts);
-            $nodes = $visitor->getNodes();
-            $sumcount = count($nodes);
-            $count = $visitor->getCount();
+            //$nodes = $visitor->getNodes();
+            //$sumcount = count($nodes);
+            //$count = $visitor->getCount();
             
-            if ($sumcount == 0){
-                continue;
-            }
+            //if ($sumcount == 0){
+            //    continue;
+            //}
             //暂时确定当比值小于0.6，为main php files
-            if($count / $sumcount < 0.6){
+            //if($count / $sumcount < 0.6){
                 array_push($should2parser, $file);
-            }
-            $visitor->setCount(0);
-            $visitor->setNodes(array());
+            //}
+            //$visitor->setCount(0);
+            //$visitor->setNodes(array());
         }
        return $should2parser;
     }

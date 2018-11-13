@@ -17,7 +17,12 @@ class CFGGenerator{
 	private $fileSummary ;
 	//构造器
 	public function __construct(){
-		$this->parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative) ;
+		$lexer = new PhpParser\Lexer(array(
+			'usedAttributes' => array(
+				'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+			)
+		));
+		$this->parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 		$this->traverser = new PhpParser\NodeTraverser ;
 		$this->fileSummary = new FileSummary() ;
 	}	
@@ -84,7 +89,11 @@ class CFGGenerator{
 				//catch分支
 				$catches = $node->catches ;
 				foreach ($catches as $catch){
-					$catch_branch = new Branch($catch->type, $catch->stmts) ;
+					ob_start();
+					var_dump($catch);
+					$result = ob_get_clean();
+					
+					$catch_branch = new Branch($catch->types, $catch->stmts) ;
 					array_push($branches, $catch_branch) ;
 				}
 				break ;
@@ -434,7 +443,12 @@ class CFGGenerator{
 	private function sinkFunctionHandler($node,$block,$parentBlock){
 	    global $scan_type;
 		//对函数体的代码进行遍历并获取敏感参数的位置
-		$parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative) ;
+		$lexer = new PhpParser\Lexer(array(
+			'usedAttributes' => array(
+				'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+			)
+		));
+		$parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 		$traverser = new PhpParser\NodeTraverser;
 		$visitor = new FunctionVisitor() ;
 		$visitor->fileSummary = $this->fileSummary ;
@@ -920,7 +934,7 @@ class FunctionVisitor extends PhpParser\NodeVisitorAbstract{
 			        $this->fileSummary->getIncludeMap()
 			    );
 			    
-			    if(!$funcBody) break ;
+			    if(!$funcBody) return ;
 			    $cfg = new CFGGenerator() ;
 			    //$this->block->function[$nodeName]
 			    $arr = $this->sinkContext->getAllSinks() ;

@@ -1,50 +1,35 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace PhpParser\Node\Stmt;
 
 use PhpParser\Node;
-use PhpParser\Error;
 
-/**
- * @property string                $name    Name
- * @property Node\Name[] $extends Extended interfaces
- * @property Node[]      $stmts   Statements
- */
-class Interface_ extends Node\Stmt
+class Interface_ extends ClassLike
 {
-    protected static $specialNames = array(
-        'self'   => true,
-        'parent' => true,
-        'static' => true,
-    );
+    /** @var Node\Name[] Extended interfaces */
+    public $extends;
 
     /**
      * Constructs a class node.
      *
-     * @param string $name       Name
+     * @param string|Node\Identifier $name Name
      * @param array  $subNodes   Array of the following optional subnodes:
      *                           'extends' => array(): Name of extended interfaces
      *                           'stmts'   => array(): Statements
      * @param array  $attributes Additional attributes
      */
-    public function __construct($name, array $subNodes = array(), array $attributes = array()) {
-        parent::__construct(
-            array(
-                'name'    => $name,
-                'extends' => isset($subNodes['extends']) ? $subNodes['extends'] : array(),
-                'stmts'   => isset($subNodes['stmts'])   ? $subNodes['stmts']   : array(),
-            ),
-            $attributes
-        );
+    public function __construct($name, array $subNodes = [], array $attributes = []) {
+        parent::__construct($attributes);
+        $this->name = \is_string($name) ? new Node\Identifier($name) : $name;
+        $this->extends = $subNodes['extends'] ?? [];
+        $this->stmts = $subNodes['stmts'] ?? [];
+    }
 
-        if (isset(self::$specialNames[(string) $this->name])) {
-            throw new Error(sprintf('Cannot use \'%s\' as class name as it is reserved', $this->name));
-        }
-
-        foreach ($this->extends as $interface) {
-            if (isset(self::$specialNames[(string) $interface])) {
-                throw new Error(sprintf('Cannot use \'%s\' as interface name as it is reserved', $interface));
-            }
-        }
+    public function getSubNodeNames() : array {
+        return ['name', 'extends', 'stmts'];
+    }
+    
+    public function getType() : string {
+        return 'Stmt_Interface';
     }
 }

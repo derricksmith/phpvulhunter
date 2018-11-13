@@ -10,15 +10,21 @@
         }
     ],
     "require": {
-        "php": ">=5.3",
+        "php": ">=7.0",
         "ext-tokenizer": "*"
     },
-    "autoload": {
-        "files": ["lib/bootstrap.php"]
+    "require-dev": {
+        "phpunit/phpunit": "^6.5 || ^7.0"
     },
+    "autoload": {
+        "psr-4": {
+            "PhpParser\\": "lib/PhpParser"
+        }
+    },
+    "bin": ["bin/php-parse"],
     "extra": {
         "branch-alias": {
-            "dev-master": "1.0-dev"
+            "dev-master": "4.1-dev"
         }
     }
 }

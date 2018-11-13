@@ -232,7 +232,12 @@ class Context {
 	        $startLine = $method['startLine'] ;
 	        $endLine = $method['endLine'] ;
 	         
-	        $parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative) ;
+	        $lexer = new PhpParser\Lexer(array(
+				'usedAttributes' => array(
+					'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+				)
+			));
+			$parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 	        $visitor = new FunctionBodyVisitor ;
 	        $traverser = new PhpParser\NodeTraverser ;
 	        $visitor->startLine = $startLine ;
@@ -468,10 +473,13 @@ class ClassFinder{
 	*/
 	public function __construct($path){
 		$this->path = $path ;
-		$this->parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative) ;
-		$this->visitor = new ClassVisitor ;
-		$this->traverser = new PhpParser\NodeTraverser ;
-		$this->traverser->addVisitor($this->visitor) ;
+		//$this->parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative) ;
+		$lexer = new PhpParser\Lexer(array(
+			'usedAttributes' => array(
+				'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+			)
+		));
+		$this->parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 	}
 
 	/*
@@ -492,13 +500,13 @@ class ClassFinder{
 	    $fileName = str_replace(':', '_', $fileName);
 	    $serialPath = CURR_PATH . "/data/serialdata/" . $fileName;
 	    
-	    if (!is_file($serialPath)){
+	    if (!is_file($serialPath) && file_exists($serialPath)){
 	        //创建文件
 	        $fileHandler = fopen($serialPath, 'w');
 	        fclose($fileHandler);
 	    }
 		//判断本地序列化文件中是否存在Context
-		if(($serial_str = file_get_contents($serialPath)) != ''){
+		if(file_exists($serialPath) && ($serial_str = file_get_contents($serialPath)) != ''){
 			$records = unserialize($serial_str) ;
 			$context = Context::getInstance() ;
 			$context->records = $records ;
@@ -509,15 +517,23 @@ class ClassFinder{
 		$len = count($filearr) ;
 		
 		for($i=0;$i<$len;$i++){
+			$this->visitor = new ClassVisitor ;
+			$this->traverser = new PhpParser\NodeTraverser ;
+			$this->traverser->addVisitor($this->visitor) ;
+			$this->traverser->addVisitor(new MyNodeVisitor);
 			$this->visitor->class_path = $filearr[$i] ;
+			
 			$code = file_get_contents($this->visitor->class_path);
+			error_log("\n".$this->visitor->class_path."\n", 3, "/var/www/glpi/parser/error.log");
 			try{
-				$stmts = $this->parser->parse($code) ;	
+				$stmts = $this->parser->parse($code) ;
+							
 			}catch (PhpParser\Error $e) {
     			continue ;
 			}
 			
 			$this->traverser->traverse($stmts) ;  //遍历AST
+			
 		}
 
 		
@@ -530,7 +546,9 @@ class ClassFinder{
 	}
 
 	public function serializeContext($context, $serialPath){
-		file_put_contents($serialPath, serialize($context->records)) ;
+		if(file_exists($serialPath)){
+			file_put_contents($serialPath, serialize($context->records)) ;
+		}
 	}
 
 	/*

@@ -21,9 +21,17 @@ class NodeUtils{
             case "Scalar_String":
             case "Scalar_LNumber":
             case "Scalar_DNumber":
-                if($node->name){
-                    return $node->name ;
-                }
+				if(property_exists($node, 'name')){
+					if($node->name){
+						return $node->name ;
+					}
+				} 
+				if(property_exists($node, 'value')){
+					if($node->value){
+						return $node->value ;
+					}
+				}
+					
                 $names = $node->getSubNodeNames();
                 foreach ($names as $name){
                     return($node->$name);
@@ -42,7 +50,20 @@ class NodeUtils{
                 break;
             //param name
             case "Param":
-                return $node->name;
+				if(property_exists($node, 'name')){
+					if($node->name){
+						return $node->name ;
+					}
+				} 
+				if(property_exists($node, 'var')){
+					if($node->var->name){
+						return $node->var->name ;
+					}
+				} 
+					ob_start();
+					print_r($node);
+					error_log("\n".ob_get_clean()."\n", 3, "/var/www/glpi/parser/error.log");
+				
                 break;
             case "Name":
                 $names = $node->getSubNodeNames();
@@ -372,7 +393,7 @@ class NodeUtils{
     	
     	//处理其他的函数
     	$argsArr = array();
-    	if ($node->args){
+    	if (property_exists($node,'args')){
     	    foreach ($node->args as $arg){
     	    	//如果为concat类型
     	    	if($arg->value->getType() == "Expr_BinaryOp_Concat"){

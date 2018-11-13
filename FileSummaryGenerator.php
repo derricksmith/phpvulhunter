@@ -54,7 +54,12 @@ class FileSummaryGenerator {
 	        return ;
 		}
 	    $visitor = new MyVisitor() ;
-	    $parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative) ;
+	    $lexer = new PhpParser\Lexer(array(
+			'usedAttributes' => array(
+				'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+			)
+		));
+		$parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 	    $traverser = new PhpParser\NodeTraverser ;
 	    $code = file_get_contents($absPath);
 	    try {

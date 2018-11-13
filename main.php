@@ -16,7 +16,12 @@ function load_file($path){
 	$cfg->getFileSummary()->setPath($path);
 	
 	$visitor = new MyVisitor() ;
-	$parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative) ;
+	$lexer = new PhpParser\Lexer(array(
+			'usedAttributes' => array(
+				'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+			)
+		));
+	$parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 	$traverser = new PhpParser\NodeTraverser ;
 
 	$code = file_get_contents($path);
@@ -117,11 +122,13 @@ $serialPath = CURR_PATH . "/data/resultConetxtSerialData/" . $fileName;
 
 if (!is_file($serialPath)){
     //创建文件
-    $fileHandler = fopen($serialPath, 'w');
-    fclose($fileHandler);
+	if (file_exists($serialPath)){
+		$fileHandler = fopen($serialPath, 'w');
+		fclose($fileHandler);
+	}
 }
 $results = null;
-if(($serial_str = file_get_contents($serialPath)) != ''){
+if(file_exists($serialPath) && ($serial_str = file_get_contents($serialPath)) != ''){
     $results = unserialize($serial_str) ;
 }else{
     //3、初始化模块
@@ -150,8 +157,9 @@ if(($serial_str = file_get_contents($serialPath)) != ''){
     
     //5、处理results 序列化
     $results = ResultContext::getInstance() ;
-    file_put_contents($serialPath, serialize($results)) ;
-    
+    if (file_exists($serialPath)){
+		file_put_contents($serialPath, serialize($results)) ;
+    }
 }
 
 

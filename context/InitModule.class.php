@@ -34,13 +34,13 @@ class InitModule {
 	    $fileName = str_replace('/', '_', $project_path);
 	    $fileName = str_replace(':', '_', $fileName);
 	    $serialPath = CURR_PATH . "/data/fileSummaryConetxtSerialData/" . $fileName;
-	    if (!is_file($serialPath)){
+	    if (file_exists($serialPath) && !is_file($serialPath)){
 	        //创建文件
 	        $fileHandler = fopen($serialPath, 'w');
 	        fclose($fileHandler);
 	    }
 	    //判断本地序列化文件中是否存在UserSanitizeFuncConetxt
-	    if(($serial_str = file_get_contents($serialPath))!=''){
+	    if(file_exists($serialPath) && ($serial_str = file_get_contents($serialPath))!=''){
 	        $fileSummaryMap = unserialize($serial_str) ;
 	        $fileSummaryContext = FileSummaryContext::getInstance();
 	        $fileSummaryContext->setFileSummaryMap($fileSummaryMap);
@@ -64,7 +64,9 @@ class InitModule {
 	 * @param multitype $context
 	 */	
 	public function serializeContext($path, $context){
-	    file_put_contents($path, serialize($context)) ;
+	    if(file_exists($path)){
+			file_put_contents($path, serialize($context)) ;
+		}
 	}
 	
 

@@ -15,7 +15,12 @@ class ConcatSymbol extends Symbol{
 	public function setItemByNode($node){
 		$type = $node->getType() ;
 		if($type == "Expr_BinaryOp_Concat"){
-			$parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative) ;
+			$lexer = new PhpParser\Lexer(array(
+					'usedAttributes' => array(
+						'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+					)
+				));
+			$parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 			$traverser = new PhpParser\NodeTraverser;
 			$visitor = new BinaryOpConcatVisitor() ;
 			$traverser->addVisitor($visitor) ;
