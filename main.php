@@ -75,6 +75,10 @@ function convertResults($resContext){
             $var_start = $node_start ;
             $var_end = $node_end ;
         }else{
+			ob_start();
+				print_r($var);
+				error_log("\n".ob_get_clean()."\n", 3, "/var/www/phpvulhunter/error.log");
+
             $var_start = $var->getAttribute('startLine') ;
             $var_end = $var->getAttribute('endLine') ;
         }

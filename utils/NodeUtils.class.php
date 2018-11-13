@@ -177,11 +177,7 @@ class NodeUtils{
                 $objectName = NodeUtils::getNodeStringName($node->class);
 				$methodName = NodeUtils::getNodeStringName($node->name);
                 //$methodName = $node->name;
-				ob_start();
-				print_r($node);
-				error_log("\n".ob_get_clean()."\n", 3, "/var/www/phpvulhunter/error.log");
-                error_log("\n".$objectName."\n", 3, "/var/www/phpvulhunter/error.log");
-				error_log("\n".$methodName."\n", 3, "/var/www/phpvulhunter/error.log");
+				
 				
 				return "$objectName:$methodName";
                 break;
