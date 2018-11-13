@@ -235,7 +235,12 @@ class SanitizationHandler {
 	        if(!$funcBody) return null;
 
 	        $visitor = new SanitiFunctionVisitor();
-	        $parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative) ;
+	        $lexer = new PhpParser\Lexer(array(
+				'usedAttributes' => array(
+					'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+				)
+			));
+			$parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 	        $traverser = new PhpParser\NodeTraverser ;
 	        $traverser->addVisitor($visitor) ;
 	        $visitor->funcName = $funcName;
