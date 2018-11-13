@@ -21,17 +21,9 @@ class NodeUtils{
             case "Scalar_String":
             case "Scalar_LNumber":
             case "Scalar_DNumber":
-				if(property_exists($node, 'name')){
-					if($node->name){
-						return $node->name ;
-					}
-				} 
-				if(property_exists($node, 'value')){
-					if($node->value){
-						return $node->value ;
-					}
-				}
-					
+                if($node->name){
+                    return $node->name ;
+                }
                 $names = $node->getSubNodeNames();
                 foreach ($names as $name){
                     return($node->$name);
@@ -50,20 +42,7 @@ class NodeUtils{
                 break;
             //param name
             case "Param":
-				if(property_exists($node, 'name')){
-					if($node->name){
-						return $node->name ;
-					}
-				} 
-				if(property_exists($node, 'var')){
-					if($node->var->name){
-						return $node->var->name ;
-					}
-				} 
-					ob_start();
-					print_r($node);
-					error_log("\n".ob_get_clean()."\n", 3, "/var/www/glpi/parser/error.log");
-				
+                return $node->name;
                 break;
             case "Name":
                 $names = $node->getSubNodeNames();
@@ -149,7 +128,7 @@ class NodeUtils{
             return null;
         }
         $type = $node->getType();
-        error_log("\n".$type."\n", 3, "/var/www/phpvulhunter/error.log");
+        //print_r($type);
         switch ($type) {
             //function a(){},
             case "Stmt_Function":
@@ -168,17 +147,14 @@ class NodeUtils{
                 $objectName = NodeUtils::getNodeStringName($node->var);
                 $methodName = $node->name;
                 if(is_object($objectName) || is_object($methodName)){
-					return "";
+                    return "";
                 }
                 return "$objectName:$methodName";
                 break;
             //class::static function()
             case "Expr_StaticCall":
                 $objectName = NodeUtils::getNodeStringName($node->class);
-				$methodName = $node->name;
-                if(is_object($objectName) || is_object($methodName)){
-					return "";
-                }
+                $methodName = $node->name;
                 return "$objectName:$methodName";
                 break;
             //匿名函数
@@ -244,7 +220,6 @@ class NodeUtils{
     	$symbol = new ConcatSymbol() ;
     	$symbol->setItemByNode($node) ;
     	$items = $symbol->getItems() ;
-
     	foreach ($items as $item){
     		if($item instanceof ValueSymbol){
     			continue ;
@@ -345,7 +320,6 @@ class NodeUtils{
     				}
     			}
     		}
-
     		return $ret ;
     	}else if($funcName == 'include'){
     	   $ret = array() ;
@@ -396,7 +370,7 @@ class NodeUtils{
     	
     	//处理其他的函数
     	$argsArr = array();
-    	if (property_exists($node,'args')){
+    	if ($node->args){
     	    foreach ($node->args as $arg){
     	    	//如果为concat类型
     	    	if($arg->value->getType() == "Expr_BinaryOp_Concat"){
@@ -512,7 +486,6 @@ class NodeUtils{
     	$nameNum = count($F_SINK_ARRAY);
     	$userDefinedSink = UserDefinedSinkContext::getInstance() ;
     	$U_SINK_ALL = $userDefinedSink->getAllSinks() ;
-
     	//根据scanType,查找sink函数
     	switch ($scanType){
     	    case 'ALL':
@@ -750,9 +723,6 @@ class NodeUtils{
     
     
 }
-
-
-
 /**
  * 用来遍历包含节点的辅助类
  * @author Exploit
@@ -763,23 +733,7 @@ class IncludeVisitor extends  PhpParser\NodeVisitorAbstract{
 		array_push($this->strings, NodeUtils::getNodeStringName($node)) ;
 	}
 }
-
-
-
 ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
