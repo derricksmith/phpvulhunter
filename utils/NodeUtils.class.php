@@ -16,7 +16,7 @@ class NodeUtils{
             return null;
         }
         $type = $node->getType();
-		error_log($type,0,'error.log');
+		error_log($type,3,'error.log');
 		ob_start();
 		print_r($node);
 		error_log(ob_get_clean(),3,'error.log');
