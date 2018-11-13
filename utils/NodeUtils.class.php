@@ -50,6 +50,7 @@ class NodeUtils{
 				if (property_exists($node, 'name')){
 					return $node->name;
 				}
+				return NodeUtils::getNodeStringName($node->var);
                 break;
             case "Name":
                 $names = $node->getSubNodeNames();
