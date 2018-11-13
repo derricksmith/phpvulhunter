@@ -175,7 +175,8 @@ class NodeUtils{
             //class::static function()
             case "Expr_StaticCall":
                 $objectName = NodeUtils::getNodeStringName($node->class);
-                $methodName = $node->name;
+				$methodName = NodeUtils::getNodeStringName($node->class);
+                //$methodName = $node->name;
 				ob_start();
 				print_r($node);
 				error_log("\n".ob_get_clean()."\n", 3, "/var/www/phpvulhunter/error.log");
