@@ -861,7 +861,7 @@ class nodeFunctionVisitor extends PhpParser\NodeVisitorAbstract{
         //处理过程间代码，即调用的方法定义中的源码
         
             $this->cfgGen->functionHandler($node, $this->block, $this->fileSummary);
-        }
+        
     }
 }
 
