@@ -175,11 +175,11 @@ class NodeUtils{
             //class::static function()
             case "Expr_StaticCall":
                 $objectName = NodeUtils::getNodeStringName($node->class);
-				$methodName = NodeUtils::getNodeStringName($node->name);
-                //$methodName = $node->name;
-				
-				
-				return "$objectName:$methodName";
+				$methodName = $node->name;
+                if(is_object($objectName) || is_object($methodName)){
+					return "";
+                }
+                return "$objectName:$methodName";
                 break;
             //匿名函数
             case "Expr_Closure":
