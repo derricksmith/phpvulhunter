@@ -378,7 +378,7 @@ class NodeUtils{
     	
     	//处理其他的函数
     	$argsArr = array();
-    	if ($node->args){
+    	if (property_exists($node, 'args')){
     	    foreach ($node->args as $arg){
     	    	//如果为concat类型
     	    	if($arg->value->getType() == "Expr_BinaryOp_Concat"){
