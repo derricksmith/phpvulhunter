@@ -176,8 +176,8 @@ class NodeUtils{
             case "Expr_StaticCall":
                 $objectName = NodeUtils::getNodeStringName($node->class);
                 $methodName = $node->name;
-                error_log("\n".$objectName."\n", 3, "/var/www/glpi/parser/error.log");
-				error_log("\n".$methodName."\n", 3, "/var/www/glpi/parser/error.log");
+                error_log("\n".$objectName."\n", 3, "/var/www/phpvulhunter/error.log");
+				error_log("\n".$methodName."\n", 3, "/var/www/phpvulhunter/error.log");
 				
 				return "$objectName:$methodName";
                 break;
