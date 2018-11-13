@@ -1,41 +1,52 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace PhpParser\Node\Stmt;
 
 use PhpParser\Node;
-use PhpParser\Error;
+use PhpParser\Node\Identifier;
 
-/**
- * @property Node\Name $name  Namespace/Class to alias
- * @property string    $alias Alias
- */
 class UseUse extends Node\Stmt
 {
+    /** @var int One of the Stmt\Use_::TYPE_* constants. Will only differ from TYPE_UNKNOWN for mixed group uses */
+    public $type;
+    /** @var Node\Name Namespace, class, function or constant to alias */
+    public $name;
+    /** @var Identifier|null Alias */
+    public $alias;
+
     /**
      * Constructs an alias (use) node.
      *
-     * @param Node\Name   $name       Namespace/Class to alias
-     * @param null|string $alias      Alias
-     * @param array       $attributes Additional attributes
+     * @param Node\Name              $name       Namespace/Class to alias
+     * @param null|string|Identifier $alias      Alias
+     * @param int                    $type       Type of the use element (for mixed group use only)
+     * @param array                  $attributes Additional attributes
      */
-    public function __construct(Node\Name $name, $alias = null, array $attributes = array()) {
-        if (null === $alias) {
-            $alias = $name->getLast();
+    public function __construct(Node\Name $name, $alias = null, int $type = Use_::TYPE_UNKNOWN, array $attributes = []) {
+        parent::__construct($attributes);
+        $this->type = $type;
+        $this->name = $name;
+        $this->alias = \is_string($alias) ? new Identifier($alias) : $alias;
+    }
+
+    public function getSubNodeNames() : array {
+        return ['type', 'name', 'alias'];
+    }
+
+    /**
+     * Get alias. If not explicitly given this is the last component of the used name.
+     *
+     * @return Identifier
+     */
+    public function getAlias() : Identifier {
+        if (null !== $this->alias) {
+            return $this->alias;
         }
 
-        if ('self' == $alias || 'parent' == $alias) {
-            throw new Error(sprintf(
-                'Cannot use %s as %s because \'%2$s\' is a special class name',
-                $name, $alias
-            ));
-        }
-
-        parent::__construct(
-            array(
-                'name'  => $name,
-                'alias' => $alias,
-            ),
-            $attributes
-        );
+        return new Identifier($this->name->getLast());
+    }
+    
+    public function getType() : string {
+        return 'Stmt_UseUse';
     }
 }

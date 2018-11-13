@@ -1,29 +1,34 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace PhpParser\Node\Stmt;
 
 use PhpParser\Node;
 
-/**
- * @property string    $key   Key
- * @property Node\Expr $value Value
- */
 class DeclareDeclare extends Node\Stmt
 {
+    /** @var Node\Identifier Key */
+    public $key;
+    /** @var Node\Expr Value */
+    public $value;
+
     /**
      * Constructs a declare key=>value pair node.
      *
-     * @param string    $key        Key
-     * @param Node\Expr $value      Value
-     * @param array     $attributes Additional attributes
+     * @param string|Node\Identifier $key        Key
+     * @param Node\Expr              $value      Value
+     * @param array                  $attributes Additional attributes
      */
-    public function __construct($key, Node\Expr $value, array $attributes = array()) {
-        parent::__construct(
-            array(
-                'key'   => $key,
-                'value' => $value,
-            ),
-            $attributes
-        );
+    public function __construct($key, Node\Expr $value, array $attributes = []) {
+        parent::__construct($attributes);
+        $this->key = \is_string($key) ? new Node\Identifier($key) : $key;
+        $this->value = $value;
+    }
+
+    public function getSubNodeNames() : array {
+        return ['key', 'value'];
+    }
+    
+    public function getType() : string {
+        return 'Stmt_DeclareDeclare';
     }
 }
