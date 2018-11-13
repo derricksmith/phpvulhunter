@@ -48,7 +48,7 @@ class NodeUtils{
                 break;
             //param name
             case "Param":
-                return $node->name;
+                return $node->var->name;
                 break;
             case "Name":
                 $names = $node->getSubNodeNames();
