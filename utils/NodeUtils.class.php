@@ -175,7 +175,7 @@ class NodeUtils{
             //class::static function()
             case "Expr_StaticCall":
                 $objectName = NodeUtils::getNodeStringName($node->class);
-				$methodName = NodeUtils::getNodeStringName($node->class);
+				$methodName = NodeUtils::getNodeStringName($node->name);
                 //$methodName = $node->name;
 				ob_start();
 				print_r($node);
