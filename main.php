@@ -77,11 +77,11 @@ function convertResults($resContext){
             $var_end = $node_end ;
         }else{
 			ob_start();
-	print_r($record);
-	error_log("\n".ob_get_clean()."\n", 3, "/var/www/phpvulhunter/error.log");
+			print_r($record);
+			error_log("\n".ob_get_clean()."\n", 3, "/var/www/phpvulhunter/error.log");
 			
-            $var_start = $var->getAttribute('startLine') ;
-            $var_end = $var->getAttribute('endLine') ;
+            $var_start = $node->getAttribute('startLine') ;
+            $var_end = $node->getAttribute('endLine') ;
         }
         $var_item['line'] = $var_start . "|" . $var_end ;
         $var_item['code'] = FileUtils::getCodeByLine($record['var_path'], $var_start, $var_end) ;
