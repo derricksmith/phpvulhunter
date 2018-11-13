@@ -149,7 +149,7 @@ class NodeUtils{
             return null;
         }
         $type = $node->getType();
-        //print_r($type);
+        error_log("\n".$type."\n", 3, "/var/www/phpvulhunter/error.log");
         switch ($type) {
             //function a(){},
             case "Stmt_Function":
