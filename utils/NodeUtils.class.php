@@ -22,7 +22,6 @@ class NodeUtils{
 		error_log(ob_get_clean(),3,'error.log');
         switch ($type) {    
             case "Expr_Variable":
-				return $node->name ;
             case "Scalar_String":
 				return $node->value;
             case "Scalar_LNumber":
