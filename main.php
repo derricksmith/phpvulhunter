@@ -18,9 +18,9 @@ function load_file($path){
 	$visitor = new MyVisitor() ;
 	$lexer = new PhpParser\Lexer(array(
 			'usedAttributes' => array(
-				'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
-			)
-		));
+			'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+		)
+	));
 	$parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 	$traverser = new PhpParser\NodeTraverser ;
 
@@ -43,7 +43,6 @@ function load_file($path){
 function convertResults($resContext){
     $ret = array() ;
     $resArr = $resContext->getResArr() ;
-	
     foreach($resArr as $record){
         $item = array() ;
         $record = $record->getRecord() ;
@@ -76,12 +75,8 @@ function convertResults($resContext){
             $var_start = $node_start ;
             $var_end = $node_end ;
         }else{
-			ob_start();
-			print_r($record);
-			error_log("\n".ob_get_clean()."\n", 3, "/var/www/phpvulhunter/error.log");
-			
-            $var_start = $node->getAttribute('startLine') ;
-            $var_end = $node->getAttribute('endLine') ;
+            $var_start = $var->getAttribute('startLine') ;
+            $var_end = $var->getAttribute('endLine') ;
         }
         $var_item['line'] = $var_start . "|" . $var_end ;
         $var_item['code'] = FileUtils::getCodeByLine($record['var_path'], $var_start, $var_end) ;
@@ -127,13 +122,11 @@ $serialPath = CURR_PATH . "/data/resultConetxtSerialData/" . $fileName;
 
 if (!is_file($serialPath)){
     //创建文件
-	if (file_exists($serialPath)){
-		$fileHandler = fopen($serialPath, 'w');
-		fclose($fileHandler);
-	}
+    $fileHandler = fopen($serialPath, 'w');
+    fclose($fileHandler);
 }
 $results = null;
-if(file_exists($serialPath) && ($serial_str = file_get_contents($serialPath)) != ''){
+if(($serial_str = file_get_contents($serialPath)) != ''){
     $results = unserialize($serial_str) ;
 }else{
     //3、初始化模块
@@ -162,9 +155,8 @@ if(file_exists($serialPath) && ($serial_str = file_get_contents($serialPath)) !=
     
     //5、处理results 序列化
     $results = ResultContext::getInstance() ;
-    if (file_exists($serialPath)){
-		file_put_contents($serialPath, serialize($results)) ;
-    }
+    file_put_contents($serialPath, serialize($results)) ;
+    
 }
 
 

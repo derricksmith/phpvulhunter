@@ -284,7 +284,12 @@ class UserSanitiFuncFinder{
      */
     public function __construct($path){
         $this->path = $path ;
-        $this->parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative) ;
+        $lexer = new PhpParser\Lexer(array(
+				'usedAttributes' => array(
+				'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+			)
+		));
+		$this->parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
         $this->visitor = new SanitizeFuncVisitor ;
         $this->traverser = new PhpParser\NodeTraverser ;
         $this->traverser->addVisitor($this->visitor) ;

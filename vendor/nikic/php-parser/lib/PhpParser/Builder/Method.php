@@ -1,26 +1,23 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Builder;
 
 use PhpParser;
-use PhpParser\BuilderHelpers;
 use PhpParser\Node;
 use PhpParser\Node\Stmt;
 
 class Method extends FunctionLike
 {
     protected $name;
-    protected $flags = 0;
-
-    /** @var array|null */
-    protected $stmts = [];
+    protected $type = 0;
+    protected $stmts = array();
 
     /**
      * Creates a method builder.
      *
      * @param string $name Name of the method
      */
-    public function __construct(string $name) {
+    public function __construct($name) {
         $this->name = $name;
     }
 
@@ -30,7 +27,7 @@ class Method extends FunctionLike
      * @return $this The builder instance (for fluid interface)
      */
     public function makePublic() {
-        $this->flags = BuilderHelpers::addModifier($this->flags, Stmt\Class_::MODIFIER_PUBLIC);
+        $this->setModifier(Stmt\Class_::MODIFIER_PUBLIC);
 
         return $this;
     }
@@ -41,7 +38,7 @@ class Method extends FunctionLike
      * @return $this The builder instance (for fluid interface)
      */
     public function makeProtected() {
-        $this->flags = BuilderHelpers::addModifier($this->flags, Stmt\Class_::MODIFIER_PROTECTED);
+        $this->setModifier(Stmt\Class_::MODIFIER_PROTECTED);
 
         return $this;
     }
@@ -52,7 +49,7 @@ class Method extends FunctionLike
      * @return $this The builder instance (for fluid interface)
      */
     public function makePrivate() {
-        $this->flags = BuilderHelpers::addModifier($this->flags, Stmt\Class_::MODIFIER_PRIVATE);
+        $this->setModifier(Stmt\Class_::MODIFIER_PRIVATE);
 
         return $this;
     }
@@ -63,7 +60,7 @@ class Method extends FunctionLike
      * @return $this The builder instance (for fluid interface)
      */
     public function makeStatic() {
-        $this->flags = BuilderHelpers::addModifier($this->flags, Stmt\Class_::MODIFIER_STATIC);
+        $this->setModifier(Stmt\Class_::MODIFIER_STATIC);
 
         return $this;
     }
@@ -78,7 +75,7 @@ class Method extends FunctionLike
             throw new \LogicException('Cannot make method with statements abstract');
         }
 
-        $this->flags = BuilderHelpers::addModifier($this->flags, Stmt\Class_::MODIFIER_ABSTRACT);
+        $this->setModifier(Stmt\Class_::MODIFIER_ABSTRACT);
         $this->stmts = null; // abstract methods don't have statements
 
         return $this;
@@ -90,7 +87,7 @@ class Method extends FunctionLike
      * @return $this The builder instance (for fluid interface)
      */
     public function makeFinal() {
-        $this->flags = BuilderHelpers::addModifier($this->flags, Stmt\Class_::MODIFIER_FINAL);
+        $this->setModifier(Stmt\Class_::MODIFIER_FINAL);
 
         return $this;
     }
@@ -107,7 +104,7 @@ class Method extends FunctionLike
             throw new \LogicException('Cannot add statements to an abstract method');
         }
 
-        $this->stmts[] = BuilderHelpers::normalizeStmt($stmt);
+        $this->stmts[] = $this->normalizeNode($stmt);
 
         return $this;
     }
@@ -117,13 +114,12 @@ class Method extends FunctionLike
      *
      * @return Stmt\ClassMethod The built method node
      */
-    public function getNode() : Node {
-        return new Stmt\ClassMethod($this->name, [
-            'flags'      => $this->flags,
-            'byRef'      => $this->returnByRef,
-            'params'     => $this->params,
-            'returnType' => $this->returnType,
-            'stmts'      => $this->stmts,
-        ], $this->attributes);
+    public function getNode() {
+        return new Stmt\ClassMethod($this->name, array(
+            'type'   => $this->type !== 0 ? $this->type : Stmt\Class_::MODIFIER_PUBLIC,
+            'byRef'  => $this->returnByRef,
+            'params' => $this->params,
+            'stmts'  => $this->stmts,
+        ), $this->attributes);
     }
 }

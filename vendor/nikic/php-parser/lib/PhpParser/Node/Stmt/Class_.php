@@ -1,11 +1,18 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Stmt;
 
-use PhpParser\Error;
 use PhpParser\Node;
+use PhpParser\Error;
 
-class Class_ extends ClassLike
+/**
+ * @property int            $type       Type
+ * @property string         $name       Name
+ * @property null|Node\Name $extends    Name of extended class
+ * @property Node\Name[]    $implements Names of implemented interfaces
+ * @property Node[]         $stmts      Statements
+ */
+class Class_ extends Node\Stmt
 {
     const MODIFIER_PUBLIC    =  1;
     const MODIFIER_PROTECTED =  2;
@@ -14,71 +21,75 @@ class Class_ extends ClassLike
     const MODIFIER_ABSTRACT  = 16;
     const MODIFIER_FINAL     = 32;
 
-    const VISIBILITY_MODIFIER_MASK = 7; // 1 | 2 | 4
+    const VISIBILITY_MODIFER_MASK = 7; // 1 | 2 | 4
 
-    /** @var int Type */
-    public $flags;
-    /** @var null|Node\Name Name of extended class */
-    public $extends;
-    /** @var Node\Name[] Names of implemented interfaces */
-    public $implements;
+    protected static $specialNames = array(
+        'self'   => true,
+        'parent' => true,
+        'static' => true,
+    );
 
     /**
      * Constructs a class node.
      *
-     * @param string|Node\Identifier|null $name Name
+     * @param string      $name       Name
      * @param array       $subNodes   Array of the following optional subnodes:
-     *                                'flags'      => 0      : Flags
+     *                                'type'       => 0      : Type
      *                                'extends'    => null   : Name of extended class
      *                                'implements' => array(): Names of implemented interfaces
      *                                'stmts'      => array(): Statements
      * @param array       $attributes Additional attributes
      */
-    public function __construct($name, array $subNodes = [], array $attributes = []) {
-        parent::__construct($attributes);
-        $this->flags = $subNodes['flags'] ?? $subNodes['type'] ?? 0;
-        $this->name = \is_string($name) ? new Node\Identifier($name) : $name;
-        $this->extends = $subNodes['extends'] ?? null;
-        $this->implements = $subNodes['implements'] ?? [];
-        $this->stmts = $subNodes['stmts'] ?? [];
+    public function __construct($name, array $subNodes = array(), array $attributes = array()) {
+        parent::__construct(
+            array(
+                'type'       => isset($subNodes['type'])       ? $subNodes['type']       : 0,
+                'name'       => $name,
+                'extends'    => isset($subNodes['extends'])    ? $subNodes['extends']    : null,
+                'implements' => isset($subNodes['implements']) ? $subNodes['implements'] : array(),
+                'stmts'      => isset($subNodes['stmts'])      ? $subNodes['stmts']      : array(),
+            ),
+            $attributes
+        );
+
+        if (isset(self::$specialNames[(string) $this->name])) {
+            throw new Error(sprintf('Cannot use \'%s\' as class name as it is reserved', $this->name));
+        }
+
+        if (isset(self::$specialNames[(string) $this->extends])) {
+            throw new Error(sprintf('Cannot use \'%s\' as class name as it is reserved', $this->extends));
+        }
+
+        foreach ($this->implements as $interface) {
+            if (isset(self::$specialNames[(string) $interface])) {
+                throw new Error(sprintf('Cannot use \'%s\' as interface name as it is reserved', $interface));
+            }
+        }
     }
 
-    public function getSubNodeNames() : array {
-        return ['flags', 'name', 'extends', 'implements', 'stmts'];
+    public function isAbstract() {
+        return (bool) ($this->type & self::MODIFIER_ABSTRACT);
     }
 
-    /**
-     * Whether the class is explicitly abstract.
-     *
-     * @return bool
-     */
-    public function isAbstract() : bool {
-        return (bool) ($this->flags & self::MODIFIER_ABSTRACT);
+    public function isFinal() {
+        return (bool) ($this->type & self::MODIFIER_FINAL);
     }
 
-    /**
-     * Whether the class is final.
-     *
-     * @return bool
-     */
-    public function isFinal() : bool {
-        return (bool) ($this->flags & self::MODIFIER_FINAL);
-    }
-
-    /**
-     * Whether the class is anonymous.
-     *
-     * @return bool
-     */
-    public function isAnonymous() : bool {
-        return null === $this->name;
+    public function getMethods() {
+        $methods = array();
+        foreach ($this->stmts as $stmt) {
+            if ($stmt instanceof ClassMethod) {
+                $methods[] = $stmt;
+            }
+        }
+        return $methods;
     }
 
     /**
      * @internal
      */
     public static function verifyModifier($a, $b) {
-        if ($a & self::VISIBILITY_MODIFIER_MASK && $b & self::VISIBILITY_MODIFIER_MASK) {
+        if ($a & self::VISIBILITY_MODIFER_MASK && $b & self::VISIBILITY_MODIFER_MASK) {
             throw new Error('Multiple access type modifiers are not allowed');
         }
 
@@ -97,9 +108,5 @@ class Class_ extends ClassLike
         if ($a & 48 && $b & 48) {
             throw new Error('Cannot use the final modifier on an abstract class member');
         }
-    }
-    
-    public function getType() : string {
-        return 'Stmt_Class';
     }
 }

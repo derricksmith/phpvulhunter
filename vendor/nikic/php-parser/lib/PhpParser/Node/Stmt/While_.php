@@ -1,34 +1,29 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Stmt;
 
 use PhpParser\Node;
 
+/**
+ * @property Node\Expr $cond  Condition
+ * @property Node[]    $stmts Statements
+ */
 class While_ extends Node\Stmt
 {
-    /** @var Node\Expr Condition */
-    public $cond;
-    /** @var Node\Stmt[] Statements */
-    public $stmts;
-
     /**
      * Constructs a while node.
      *
-     * @param Node\Expr   $cond       Condition
-     * @param Node\Stmt[] $stmts      Statements
-     * @param array       $attributes Additional attributes
+     * @param Node\Expr $cond       Condition
+     * @param Node[]    $stmts      Statements
+     * @param array     $attributes Additional attributes
      */
-    public function __construct(Node\Expr $cond, array $stmts = [], array $attributes = []) {
-        parent::__construct($attributes);
-        $this->cond = $cond;
-        $this->stmts = $stmts;
-    }
-
-    public function getSubNodeNames() : array {
-        return ['cond', 'stmts'];
-    }
-    
-    public function getType() : string {
-        return 'Stmt_While';
+    public function __construct(Node\Expr $cond, array $stmts = array(), array $attributes = array()) {
+        parent::__construct(
+            array(
+                'cond'  => $cond,
+                'stmts' => $stmts,
+            ),
+            $attributes
+        );
     }
 }

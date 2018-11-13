@@ -15,7 +15,6 @@ require_once CURR_PATH . '/utils/multiBlockHandlerUtils.class.php';
 require_once CURR_PATH . '/utils/SecureUtils.class.php';
 require_once CURR_PATH . '/utils/BIFuncUtils.class.php';
 require_once CURR_PATH . '/utils/CommonUtils.class.php';
-//require_once CURR_PATH . '/utils/RecursiveTraverser.class.php';
 
 require_once CURR_PATH . '/symbols/Symbol.class.php' ;
 require_once CURR_PATH . '/symbols/ValueSymbol.class.php';
@@ -54,9 +53,5 @@ ini_set('xdebug.max_nesting_level', 1000);
 ini_set("max_execution_time", "0");
 //设置内存限制大小
 ini_set('memory_limit', '1000M') ;
-
-ini_set('error_reporting',1);
-
-error_reporting(E_ALL);
 
 ?>

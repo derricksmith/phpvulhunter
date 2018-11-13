@@ -1,30 +1,26 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Expr;
 
 use PhpParser\Node\Expr;
 
+/**
+ * @property Expr[] $vars List of variables to assign to
+ */
 class List_ extends Expr
 {
-    /** @var (ArrayItem|null)[] List of items to assign to */
-    public $items;
-
     /**
      * Constructs a list() destructuring node.
      *
-     * @param (ArrayItem|null)[] $items      List of items to assign to
-     * @param array              $attributes Additional attributes
+     * @param Expr[] $vars       List of variables to assign to
+     * @param array  $attributes Additional attributes
      */
-    public function __construct(array $items, array $attributes = []) {
-        parent::__construct($attributes);
-        $this->items = $items;
-    }
-
-    public function getSubNodeNames() : array {
-        return ['items'];
-    }
-    
-    public function getType() : string {
-        return 'Expr_List';
+    public function __construct(array $vars, array $attributes = array()) {
+        parent::__construct(
+            array(
+                'vars' => $vars,
+            ),
+            $attributes
+        );
     }
 }

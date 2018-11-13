@@ -1,18 +1,16 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Expr;
 
 use PhpParser\Node\Expr;
 
+/**
+ * @property Expr      $value Value
+ * @property null|Expr $key   Key
+ * @property bool                     $byRef Whether to assign by reference
+ */
 class ArrayItem extends Expr
 {
-    /** @var null|Expr Key */
-    public $key;
-    /** @var Expr Value */
-    public $value;
-    /** @var bool Whether to assign by reference */
-    public $byRef;
-
     /**
      * Constructs an array item node.
      *
@@ -21,18 +19,14 @@ class ArrayItem extends Expr
      * @param bool      $byRef      Whether to assign by reference
      * @param array     $attributes Additional attributes
      */
-    public function __construct(Expr $value, Expr $key = null, bool $byRef = false, array $attributes = []) {
-        parent::__construct($attributes);
-        $this->key = $key;
-        $this->value = $value;
-        $this->byRef = $byRef;
-    }
-
-    public function getSubNodeNames() : array {
-        return ['key', 'value', 'byRef'];
-    }
-    
-    public function getType() : string {
-        return 'Expr_ArrayItem';
+    public function __construct(Expr $value, Expr $key = null, $byRef = false, array $attributes = array()) {
+        parent::__construct(
+            array(
+                'key'   => $key,
+                'value' => $value,
+                'byRef' => $byRef
+            ),
+            $attributes
+        );
     }
 }

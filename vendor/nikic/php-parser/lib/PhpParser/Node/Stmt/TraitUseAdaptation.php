@@ -1,13 +1,13 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Stmt;
 
 use PhpParser\Node;
 
+/**
+ * @property Node\Name $trait  Trait name
+ * @property string    $method Method name
+ */
 abstract class TraitUseAdaptation extends Node\Stmt
 {
-    /** @var Node\Name|null Trait name */
-    public $trait;
-    /** @var Node\Identifier Method name */
-    public $method;
 }

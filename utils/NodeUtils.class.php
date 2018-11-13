@@ -220,6 +220,7 @@ class NodeUtils{
     	$symbol = new ConcatSymbol() ;
     	$symbol->setItemByNode($node) ;
     	$items = $symbol->getItems() ;
+
     	foreach ($items as $item){
     		if($item instanceof ValueSymbol){
     			continue ;
@@ -320,6 +321,7 @@ class NodeUtils{
     				}
     			}
     		}
+
     		return $ret ;
     	}else if($funcName == 'include'){
     	   $ret = array() ;
@@ -486,6 +488,7 @@ class NodeUtils{
     	$nameNum = count($F_SINK_ARRAY);
     	$userDefinedSink = UserDefinedSinkContext::getInstance() ;
     	$U_SINK_ALL = $userDefinedSink->getAllSinks() ;
+
     	//根据scanType,查找sink函数
     	switch ($scanType){
     	    case 'ALL':
@@ -723,6 +726,9 @@ class NodeUtils{
     
     
 }
+
+
+
 /**
  * 用来遍历包含节点的辅助类
  * @author Exploit
@@ -733,7 +739,23 @@ class IncludeVisitor extends  PhpParser\NodeVisitorAbstract{
 		array_push($this->strings, NodeUtils::getNodeStringName($node)) ;
 	}
 }
+
+
+
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
