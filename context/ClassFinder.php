@@ -524,7 +524,7 @@ class ClassFinder{
 			$this->visitor->class_path = $filearr[$i] ;
 			
 			$code = file_get_contents($this->visitor->class_path);
-			error_log("\n".$this->visitor->class_path."\n", 3, "/var/www/glpi/parser/error.log");
+
 			try{
 				$stmts = $this->parser->parse($code) ;
 							
