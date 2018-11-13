@@ -168,7 +168,7 @@ class NodeUtils{
                 $objectName = NodeUtils::getNodeStringName($node->var);
                 $methodName = $node->name;
                 if(is_object($objectName) || is_object($methodName)){
-                    return "";
+					return "";
                 }
                 return "$objectName:$methodName";
                 break;
@@ -176,7 +176,10 @@ class NodeUtils{
             case "Expr_StaticCall":
                 $objectName = NodeUtils::getNodeStringName($node->class);
                 $methodName = $node->name;
-                return "$objectName:$methodName";
+                error_log("\n".$objectName."\n", 3, "/var/www/glpi/parser/error.log");
+				error_log("\n".$methodName."\n", 3, "/var/www/glpi/parser/error.log");
+				
+				return "$objectName:$methodName";
                 break;
             //匿名函数
             case "Expr_Closure":
