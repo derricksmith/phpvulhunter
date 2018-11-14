@@ -160,6 +160,8 @@ if(($serial_str = file_get_contents($serialPath)) != ''){
 
 
 //6、传给template
+$smarty->clear_all_cache();
+
 $template_res = convertResults($results) ;
 $smarty->assign('results',$template_res);
 $smarty->assign('nodes',$cfg->nodes);
