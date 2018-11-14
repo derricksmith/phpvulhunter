@@ -367,6 +367,11 @@ class CFGGenerator{
 	*/
 	private function globalDefinesHandler($node,$block){
 		$globalDefine = new GlobalDefines() ;
+		if (!property_exists($node,"value")){
+			echo "<pre>";
+			print_r($node);
+            die();	
+		}
 		$globalDefine->setName(NodeUtils::getNodeStringName($node->value)) ;
 		$block->getBlockSummary()->addGlobalDefineItem($globalDefine) ;
 	}
