@@ -43,10 +43,11 @@ class NodeUtils{
                 break;
             //param name
             case "Param":
-				echo "<pre>";
-				print_r($node);
-				die();
-					return $node->$name;
+				
+				if (property_exists($node, 'var'){
+					return NodeUtils::getNodeStringName($node->var);
+				}
+				return $node->name;
 				
                 break;
             case "Name":
