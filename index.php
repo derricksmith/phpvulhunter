@@ -14,7 +14,7 @@ function load_file($path){
 	$cfg = new CFGGenerator() ;
 	$cfg->getFileSummary()->setPath($path);
 	
-	$visitor = new NodeVisitors() ;
+	$visitor = new NodeVisitor() ;
 	$lexer = new PhpParser\Lexer(array(
 			'usedAttributes' => array(
 			'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
