@@ -602,10 +602,13 @@ class CFGGenerator{
 		    if($node->getType() == 'Expr_ErrorSuppress'){
 		        $node = $node->expr ;
 		    }
-			
+			echo $node->getType()."<br />";
 			switch ($node->getType()){
 				//Processing assignment statements			
 				case 'Expr_Assign':  
+					echo 'Expr_Assign <br />';
+					print_r($node);
+					
 					$dataFlow = new DataFlow() ;
 					$this->assignHandler($node, $block,$dataFlow,"left") ;
 					$this->assignHandler($node, $block,$dataFlow,"right") ;
@@ -613,14 +616,18 @@ class CFGGenerator{
 				
 				//Processing foreach, converted to assignment in the summary
 				case 'Stmt_Foreach':
+					echo 'Stmt_Foreach <br />';
+					print_r($node);
+					
 					$this->foreachHandler($block, $node) ;
 					break ;
 				
 				//Handle string connection assignment
 				//$sql .= "from users where" generates sql => "from users where"
 				case 'Expr_AssignOp_Concat':
+					echo 'Expr_AssignOp_Concat <br />';
 					print_r($node);
-					die();
+					
 					$dataFlow = new DataFlow() ;
 					$this->assignConcatHandler($node, $block,$dataFlow,"left") ;
 					$this->assignConcatHandler($node, $block,$dataFlow,"right") ;
@@ -629,21 +636,33 @@ class CFGGenerator{
 				// Handle the constant, add to the summary
 				// should use define to judge
 				case 'Expr_FuncCall' && (NodeUtils::getNodeFunctionName($node) == "define"):
+					echo 'Expr_FuncCall - define <br />';
+					print_r($node);
+					
 					$this->constantHandler($node, $block,"define") ;
 					break ;
 				
 				//Handling const key definition constants
 				case 'Stmt_Const':
+					echo 'Stmt_Const <br />';
+					print_r($node);
+					
 					$this->constantHandler($node, $block,"const") ;
 					break ;
 				
 				//Handle the definition of global variables, global $a
 				case 'Stmt_Global':
+					echo 'Stmt_Global <br />';
+					print_r($node);
+				
 					$this->globalDefinesHandler($node, $block) ;
 					break ;
 					
 				//In-process analysis record
 				case 'Stmt_Return':
+					echo 'Stmt_Return <br />';
+					print_r($node);
+					
 					$this->returnValueHandler($node, $block) ;
 					break ;
 				
@@ -652,11 +671,17 @@ class CFGGenerator{
 				case 'Expr_FuncCall' && 
 				     (NodeUtils::getNodeFunctionName($node) == "import_request_variables" || 
 				     NodeUtils::getNodeFunctionName($node) == "extract") :
+					echo 'Expr_FuncCall - import_request_variables or extract<br />';
+					print_r($node);
+					
 					$this->registerGlobalHandler($node, $block) ;
 					break ;
 					
 				//If $GLOBALS['name'] = 'xxxx' ; then merge into registerGlobal
 				case 'Expr_ArrayDimFetch' && (substr(NodeUtils::getNodeStringName($node),0,7) == "GLOBALS"):
+					echo 'Expr_ArrayDimFetch - GLOBALS<br />';
+					print_r($node);
+					
 				    $this->registerGLOBALSHandler($node, $block);
 				    break;
 				    
@@ -669,9 +694,15 @@ class CFGGenerator{
 				case 'Expr_Print':
 				case 'Expr_FuncCall':
 				case 'Expr_Eval':
+					echo 'Expr_MethodCall or Expr_Include or Expr_StaticCall or Stmt_Echo or Expr_Print or Expr_FuncCall or Expr_Eval<br />';
+					print_r($node);
+					die();
 					$this->functionHandler($node, $block, $this->fileSummary);
 					break ;
 				default:
+					echo 'Default<br />';
+					print_r($node);
+
 				    $traverser = new PhpParser\NodeTraverser;
 				    $visitor = new nodeFunctionVisitor() ;
 				    $visitor->block = $block;
@@ -682,7 +713,7 @@ class CFGGenerator{
 				    break;
 			}
 		}
-		
+		die();
 	}
 	
 	
