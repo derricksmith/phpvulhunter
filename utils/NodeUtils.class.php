@@ -19,13 +19,9 @@ class NodeUtils{
 
         switch ($type) {    
             case "Expr_Variable":
-				if($node->name){
-                    return $node->name ;
-                }
-                $names = $node->getSubNodeNames();
-                foreach ($names as $name){
-                    return($node->$name);
-                }
+				echo "<pre>";
+				print_r($node);
+				print_
                 break;
             case "Scalar_String":
 				return NodeUtils::getNodeStringName($node->value);
