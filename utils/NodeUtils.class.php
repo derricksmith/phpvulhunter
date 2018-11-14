@@ -19,6 +19,7 @@ class NodeUtils{
 
         switch ($type) {    
             case "Expr_Variable":
+				break;
             case "Scalar_String":
 				echo "<pre>";
 				print_R($node);
