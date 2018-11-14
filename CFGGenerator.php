@@ -154,7 +154,13 @@ class CFGGenerator{
 	*/
 	private function assignHandler($node,$block,$dataFlow,$type){
 	    global $scan_type ;
+		
+		if($node->getType() == 'Expr_ErrorSuppress'){
+		    $node = $node->expr ;
+		}
+		
 		$part = null ;
+		
 		if($type == "left"){
 			$part = $node->var ;
 		}else if($type == "right"){
@@ -611,9 +617,6 @@ class CFGGenerator{
 			
 			switch ($node->getType()){
 				//Processing assignment statements	
-				case 'Expr':
-					echo 'Expr <br />';
-					print_r($node);
 				case 'Expr_Assign':  
 					echo 'Expr_Assign <br />';
 					print_r($node);

@@ -8,13 +8,12 @@ class NodeFunctionVisitor extends PhpParser\NodeVisitorAbstract{
     public $cfgGen;
     
     public function leaveNode(Node $node){
-        //处理过程间代码，即调用的方法定义中的源码
+        //Process code between processes, ie the source code in the called method definition
         if(($node->getType() == 'Expr_FuncCall' ||
             $node->getType() == 'Expr_MethodCall' ||
             $node->getType() == 'Expr_StaticCall' ||
             $node->getType() == "Expr_Isset")){
             $this->cfgGen->functionHandler($node, $this->block, $this->fileSummary);
-        
 		}
 	}
 }
