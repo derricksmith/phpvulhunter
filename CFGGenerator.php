@@ -93,7 +93,7 @@ class CFGGenerator{
 					echo "<pre>";
 					print_r($catch);
 					die();
-					$catch_branch = new Branch($catch->type, $catch->stmts) ;
+					$catch_branch = new Branch($catch->types, $catch->stmts) ;
 					array_push($branches, $catch_branch) ;
 				}
 				break ;
