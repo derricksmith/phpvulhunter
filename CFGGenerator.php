@@ -1,21 +1,19 @@
 <?php
 require_once 'global.php';
-//定义PHP语句类别
-$RETURN_STATEMENT = array('Stmt_Return') ;
-$STOP_STATEMENT = array('Stmt_Throw','Stmt_Break','Stmt_Continue') ;
-$LOOP_STATEMENT = array('Stmt_For','Stmt_While','Stmt_Foreach','Stmt_Do') ;
-$JUMP_STATEMENT = array('Stmt_If','Stmt_Switch','Stmt_TryCatch','Expr_Ternary','Expr_BinaryOp_LogicalOr') ;
+// Define the PHP statement category
+
 use PhpParser\Node ;
 class CFGGenerator{
-	//AST解析类
+	//AST parsing class
 	private $parser ;  
 	
-	//AST遍历类
+	//AST traversal class
 	private $traverser ;  
 	
-	//全局的filesummary对象
+	//Global filesummary object
 	private $fileSummary ;
-	//构造器
+	
+	//constructor
 	public function __construct(){
 		$lexer = new PhpParser\Lexer(array(
 			'usedAttributes' => array(
@@ -27,31 +25,31 @@ class CFGGenerator{
 		$this->fileSummary = new FileSummary() ;
 	}	
 	
-	//fileSummary的get方法
+	//fileSummary get method
 	public function getFileSummary() {
 	    return $this->fileSummary;
 	}
 	
-	//fileSummary的set方法
+	//fileSummary set method
 	public function setFileSummary($fileSummary) {
 	    $this->fileSummary = $fileSummary;
 	}
 	
 	/**
-	 * 给定一个JUMP类型的Statement，获取分支node
-	 * @param $node为AST节点（如 If,While等）
-	 */
+		* Given a JUMP type Statement, get the branch node
+		* @param $node is an AST node (such as If, While, etc.)
+	*/
 	public function getBranches($node){
-		$type = $node->getType();   //获取AST节点的语句类型
-		$branches = array() ;   //分支数组
+		$type = $node->getType();   //Get the statement type of the AST node
+		$branches = array() ;   //branch array
 		
 		switch ($type){
 			case 'Stmt_If':
-				//处理if-else结构中的if语句，包括条件和语句
+				//Handle the if statement in the if-else structure, including conditions and statements
 				$if_branch = new Branch($node->cond, $node->stmts) ;
 				array_push($branches,$if_branch) ;
 				
-				//处理elseifs,elseifs为索引数组,由cond和stmts构成
+				//Processing elseifs, elseifs for the index array, composed of cond and stmts
 				$elseifs = $node->elseifs ;
 				if($elseifs){
 					foreach($elseifs as $if){
@@ -60,7 +58,7 @@ class CFGGenerator{
 					}	
 				}
 				
-				//处理else分支，由stmts组成，没有cond，这里的cond填为"else"
+				//Processing the else branch, composed of stmts, no cond, here cond filled in "else"
 				if($node->else){
 					$else_branch = new Branch('else', $node->else->stmts) ;
 					array_push($branches,$else_branch) ;
@@ -68,14 +66,14 @@ class CFGGenerator{
 				break ;
 				
 			case 'Stmt_Switch':
-				//switch语句中的判断条件
+				//The judgment condition in the switch statement
 				$cases = $node->cases ;
 				foreach($cases as $case){
-					//switch+case的condition
+					//switch+case's condition
 					$cond_arr = array($node->cond) ;
 					array_push($cond_arr,$case->cond) ;
 					
-					//创建分支
+					//Create a branch
 					$case_branch = new Branch($cond_arr, $case->stmts) ;
 					array_push($branches,$case_branch) ;
 				}
@@ -83,10 +81,10 @@ class CFGGenerator{
 				break ;
 			
 			case 'Stmt_TryCatch':
-				//try分支
+				//try branch
 				$try_branch = new Branch(NULL, $node->stmts) ;
 				
-				//catch分支
+				//catch branch
 				$catches = $node->catches ;
 				foreach ($catches as $catch){
 					$catch_branch = new Branch($catch->type, $catch->stmts) ;
@@ -95,7 +93,7 @@ class CFGGenerator{
 				break ;
 			
 			case 'Expr_Ternary':
-				//三元运算 A?B:C
+				//Ternary operation A?B:C
 				$if_branch = new Branch($node->cond, $node->if) ;
 				array_push($branches, $if_branch) ;
 				$else_branch = new Branch('else', $node->else) ;
@@ -103,7 +101,7 @@ class CFGGenerator{
 				break ;
 			
 			case 'Expr_BinaryOp_LogicalOr':
-				//A or B的逻辑或运算
+				//A or B logical OR operation
 				$visitor = new BranchVisitor() ;
 				$this->traverser->addVisitor($visitor) ;
 				$this->traverser->traverse(array($node)) ;
@@ -117,12 +115,11 @@ class CFGGenerator{
 	
 	
 	/**
-	 * 处理循环结构，将循环变量添加到基本块
-	 * @param $node  AST Node
-	 * @param $block  BasicBlock
-	 */
+		* Handling loop structure, adding loop variables to basic blocks
+		* @param $node AST Node
+		* @param $block BasicBlock
+	*/
 	public function addLoopVariable($node,$block){
-		//print_r($block) ;
 		switch ($node->getType()){
 			case 'Stmt_For':  //for(i=0;i<3;i++) ===> extract var i
 				$block->loop_var = $node->init[0] ;
@@ -139,17 +136,19 @@ class CFGGenerator{
 				$block->loop_var = $node->cond ;
 				break ;
 		}
-		//将循环条件加入到$block中
+		// Add the loop condition to $block
 		$block->addNode($block->loop_var) ;
 		unset($block->loop_var) ;
 	}
+	
+	
 	/**
-	 * 分析传入node赋值语句，以及当前block,
-	 * 生成block summary中的一条记录
-	 * @param ASTNode $node 赋值语句
-	 * @param BasicBlock $block
-	 * @param string $type 处理赋值语句的var和expr类型（left or right）
-	 */
+		* Analyze incoming node assignment statements, as well as the current block,
+		* Generate a record in the block summary
+		* @param ASTNode $node assignment statement
+		* @param BasicBlock $block
+		* @param string $type handles the var and expr types of the assignment statement (left or right)
+	*/
 	private function assignHandler($node,$block,$dataFlow,$type){
 	    global $scan_type ;
 		$part = null ;
@@ -160,17 +159,17 @@ class CFGGenerator{
 		}else{
 			return ;
 		}
-		//处理$GLOBALS的赋值
-		//$GLOBAL['name'] = "chongrui" ; 数据流信息为 $name = "chongrui" ;
+		// Handling the assignment of $GLOBALS
+		//$GLOBAL['name'] = "chongrui" ; The stream information is $name = "chongrui" ;
 		if ($part && SymbolUtils::isArrayDimFetch($part) && 
 		      (substr(NodeUtils::getNodeStringName($part),0,7)=="GLOBALS")){
-		    //加入dataFlow
+		    //Add dataFlow
 		    $arr = new ArrayDimFetchSymbol() ;
 		    $arr->setValue($part) ;
 		    if($type == "left"){
 		        $dataFlow->setLocation($arr) ;
 		        $dataFlow->setName(NodeUtils::getNodeGLOBALSNodeName($part)) ;
-		        //加入registerglobal
+		        //Add registerglobal
 		        $this->registerGLOBALSHandler($part, $block);
 		    }else if($type == "right"){
 		        $dataFlow->setValue($arr) ;
@@ -179,10 +178,10 @@ class CFGGenerator{
 		}
 		
 		
-		//处理赋值语句，存放在DataFlow
-		//处理赋值语句的左边
+		// Processing the assignment statement, stored in the DataFlow
+		// Handle the left side of the assignment statement
 		if($part && SymbolUtils::isValue($part)){
-			//在DataFlow加入Location以及name
+			//Add Location and name in DataFlow
 			$vs = new ValueSymbol() ;
 			$vs->setValueByNode($part) ;
 			if($type == "left"){
@@ -192,7 +191,7 @@ class CFGGenerator{
 				$dataFlow->setValue($vs) ;
 			}
 		}elseif ($part && SymbolUtils::isVariable($part)){
-			//加入dataFlow
+			//Add dataFlow
 			$vars = new VariableSymbol() ;
 			$vars->setValue($part);
 			if($type == "left"){
@@ -203,7 +202,7 @@ class CFGGenerator{
 			}
 			
 		}elseif ($part && SymbolUtils::isConstant($part)){
-			//加入dataFlow
+			//Add dataFlow
 			$con = new ConstantSymbol() ;
 			$con->setValueByNode($part) ;
 			$con->setName($part->name->parts[0]) ;
@@ -214,7 +213,7 @@ class CFGGenerator{
 				$dataFlow->setValue($con) ;
 			}
 		}elseif ($part && SymbolUtils::isArrayDimFetch($part)){
-			//加入dataFlow
+			//Add dataFlow
 			$arr = new ArrayDimFetchSymbol() ;
 			$arr->setValue($part) ;
 			$arr->setNameByNode($node);
@@ -234,44 +233,44 @@ class CFGGenerator{
 				$dataFlow->setValue($concat) ;
 			}
 		}else{
-		    //不属于已有的任何一个symbol类型,如函数调用,类型转换
+		    //does not belong to any existing symbol type, such as function calls, type conversion
 		    if($part && ($part->getType() == "Expr_FuncCall" ||
 		        $part->getType() == "Expr_MethodCall" ||
 		        $part->getType() == "Expr_StaticCall" ) ){
 
-		        //处理 id = urlencode($_GET['id']) ;
+		        //Process id = urlencode($_GET['id']) ;
 		        if($type == 'right' && !SymbolUtils::isValue($part)){
 		            $funcName = NodeUtils::getNodeFunctionName($part) ;
 		            BIFuncUtils::assignFuncHandler($part, $type, $dataFlow, $funcName) ;
 		            if($dataFlow->getValue() != null){
-		                //如果处理完函数赋值，则立即返回
+		                //If the function assignment is processed, it will return immediately
 		                $block->getBlockSummary()->addDataFlowItem($dataFlow);
 		                return  ;
 		            }else{
-		                //处理 id = urlencode($_GET['id']) ;
-		                //检查是否为sink函数
+		                //Process id = urlencode($_GET['id']) ;
+						//Check if it is a sink function
 		                $this->functionHandler($part, $block, $this->fileSummary);
 		                 
-		                //处理净化信息和编码信息
+		                //Processing purification information and coding information
 		                SanitizationHandler::setSanitiInfo($part,$dataFlow, $block, $this->fileSummary) ;
 		                EncodingHandler::setEncodeInfo($part, $dataFlow, $block, $this->fileSummary) ;
 		            }
 		        }
 
 		    }
-		    //处理类型强制转换
+		    //Processing type cast
 		    if($part && ($part->getType() == "Expr_Cast_Int" || $part->getType() == "Expr_Cast_Double")
 		        && $type == "right"){
 		        $dataFlow->getLocation()->setType("int") ;
 		        $symbol = SymbolUtils::getSymbolByNode($part->expr) ;
 		        $dataFlow->setValue($symbol) ;
 		    }
-		    //处理三元表达式
+		    //Processing ternary expressions
 		    if($part && $part->getType() == "Expr_Ternary"){
 		        BIFuncUtils::ternaryHandler($type, $part, $dataFlow) ;
 		    }
 		    
-		    //处理双引号中包含的变量
+		    //Handle the variables contained in double quotes
 		    if($part && $part->getType() == "Scalar_Encapsed"){
 		        $symbol = SymbolUtils::getSymbolByNode($part) ;
 		        $dataFlow->setValue($symbol) ;
@@ -280,26 +279,27 @@ class CFGGenerator{
 			
 		}//else
 		
-		//处理完一条赋值语句，加入DataFlowMap
+		//Processed an assignment statement, join the DataFlowMap
 		if($type == "right"){
 			$block->getBlockSummary()->addDataFlowItem($dataFlow);
 		}
 	}
 	
+	
 	/**
-	 * 处理foreach语句:
-	 * foreach($_GET['id'] as $key => $value)
-	 * 转为两条赋值：
-	 * 		$key = $_GET
-	 * 		$value = $_GET
-	 * 即key和value全部被传染
-	 * 存入block的summary中
-	 * @param BasicBlock $block
-	 * @param Node $node
-	 */
+		* Handling foreach statement:
+		* foreach($_GET['id'] as $key => $value)
+		* Convert to two assignments:
+		* $key = $_GET
+		* $value = $_GET
+		* That is, both key and value are infected
+		* Saved in the summary of the block
+		* @param BasicBlock $block
+		* @param Node $node
+	*/
 	public function foreachHandler($block,$node){
 		if($node->expr->getType() == "Expr_ArrayDimFetch"){
-			// 处理$key
+			// handle $key
 			if($node->keyVar != null){
 				$keyFlow = new DataFlow() ;
 				$keyFlow->setName(NodeUtils::getNodeStringName($node->keyVar)) ;
@@ -310,7 +310,7 @@ class CFGGenerator{
 				$block->getBlockSummary()->addDataFlowItem($keyFlow) ;
 			}
 			
-			//处理$value
+			//handle $value
 			if($node->valueVar != null){
 				$valueFlow = new DataFlow() ;
 				$valueFlow->setName(NodeUtils::getNodeStringName($node->valueVar)) ;
@@ -325,23 +325,24 @@ class CFGGenerator{
 	
 	
 	/**
-	 * 处理赋值的concat语句，添加至基本块摘要中
-	 * @param AST $node
-	 * @param BasicBlock $block
-	 * @param string $type
-	 */
+		* Process the assigned concat statement, added to the basic block summary
+		* @param AST $node
+		* @param BasicBlock $block
+		* @param string $type
+	*/
 	private function assignConcatHandler($node,$block,$dataFlow,$type){
 		$this->assignHandler($node, $block,$dataFlow,$type) ;	
 	}
 	
+	
 	/**
-	 * 处理常量，将常量添加至基本块摘要中
-	 * @param AST $node
-	 * @param BasicBlock $block
-	 * @param string $mode 常量的模式：define const
-	 */
+		* Handling constants, adding constants to the basic block summary
+		* @param AST $node
+		* @param BasicBlock $block
+		* @param string $mode constant mode: define const
+	*/
 	private function constantHandler($node,$block,$mode){
-		if($mode == "define"){
+		if($node == "define"){
 			$cons = new Constants() ;
 			if (count($node->args) > 1){
 			    $cons->setName($node->args[0]->value->value) ;
@@ -350,7 +351,7 @@ class CFGGenerator{
 			}		
 		}
 		
-		if($mode == "const"){
+		if($node == "const"){
 			$cons = new Constants() ;
 			$cons->setName($node->consts[0]->name) ;
 			$cons->setValue($node->consts[0]->value) ;
@@ -360,10 +361,10 @@ class CFGGenerator{
 	}
 	
 	/**
-	 * 处理全局变量的声明，加入至摘要中
-	 * @param Node $node
-	 * @param BasicBlock $block
-	 */
+		* Process the declaration of global variables, add to the summary
+		* @param Node $node
+		* @param BasicBlock $block
+	*/
 	private function globalDefinesHandler($node,$block){
 		$globalDefine = new GlobalDefines() ;
 		$globalDefine->setName(NodeUtils::getNodeStringName($node->value)) ;
@@ -371,10 +372,10 @@ class CFGGenerator{
 	}
 	
 	/**
-	 * 将基本块中的return提取出来
-	 * @param Node $node
-	 * @param BasicBlock $block
-	 */
+		* Extract the return from the basic block
+		* @param Node $node
+		* @param BasicBlock $block
+	*/
 	private function returnValueHandler($node,$block){
 		$returnValue = new ReturnValue() ;
 		$returnValue->setValue($node->expr) ;
@@ -382,12 +383,12 @@ class CFGGenerator{
 	}
 	
 	/**
-	 * 获取全局变量的注册信息
-	 * @param Node $node
-	 * @param BasicBlock $block
-	 */
+		* Get registration information for global variables
+		* @param Node $node
+		* @param BasicBlock $block
+	*/
 	private function registerGlobalHandler($node,$block){
-		$funcName = NodeUtils::getNodeFunctionName($node);  //获取方法调用时的方法名		
+		$funcName = NodeUtils::getNodeFunctionName($node);  //Get the method name when the method is called	
 		if($funcName != 'extract' and $funcName != "import_request_variables"){
 			return ;
 		}
@@ -395,7 +396,7 @@ class CFGGenerator{
 		switch ($funcName){
 			case 'extract':
 				$registerItem = new RegisterGlobal() ;
-				//extract只有在EXTR_OVERWRITE时才能在URL覆盖
+				//extract can only be overridden at URL when EXTR_OVERWRITE
 				if(count($node->args) > 1 && $node->args[1]->value->name->parts[0] == "EXTR_OVERWRITE"){
 					$registerItem->setIsUrlOverWrite(true) ;
 				}else{
@@ -418,10 +419,10 @@ class CFGGenerator{
 	
 	
 	/**
-	 * 检测GLOBALS的定义
-	 * @param Node $node
-	 * @param BasicBlock $block
-	 */
+		* Detecting the definition of GLOBALS
+		* @param Node $node
+		* @param BasicBlock $block
+	*/
 	private function registerGLOBALSHandler($node,$block){
 	    $registerItem = new RegisterGlobal() ;
 	    $varName = NodeUtils::getNodeGLOBALSNodeName($node);
@@ -431,14 +432,14 @@ class CFGGenerator{
 	}
 	
 	/**
-	 * 处理用户自定义函数
-	 * @param Node $nodes  方法调用node
-	 * @param BasicBlock $block  当前基本块
-	 * @return array(position) 返回危险参数的位置
-	 */
+		* Handling user-defined functions
+		* @param Node $nodes method calls node
+		* @param BasicBlock $block current basic block
+		* @return array(position) returns the position of the dangerous parameter
+	*/
 	private function sinkFunctionHandler($node,$block,$parentBlock){
 	    global $scan_type;
-		//对函数体的代码进行遍历并获取敏感参数的位置
+		//traverse the code of the function body and get the location of sensitive parameters
 		$lexer = new PhpParser\Lexer(array(
 			'usedAttributes' => array(
 				'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
@@ -454,54 +455,54 @@ class CFGGenerator{
 		$traverser->addVisitor($visitor) ;
 		$traverser->traverse(array($node)) ;
 		
-		//获取函数的参数名列表：array(id,where)
+		//Get the function's parameter name list: array (id, where)
 		$del_arg_pos = NodeUtils::getNodeFuncParams($node) ;  
 		
-		//方法返回的数组
+		//Method returns the array
 		$posArr = array();  
 		
-		//当变量无法跟踪到或变量被净化，返回null
-		//$visitor->vars是敏感参数列表
+		//When the variable cannot be traced or the variable is cleaned, return null
+		//$visitor->vars is a list of sensitive parameters
 		if((!$visitor->vars) || $visitor->vars == "safe"){
 			return null;
 		}
 		foreach($del_arg_pos as $k => $v){
 		    if(in_array($v,$visitor->vars)){
-		        //$k+1：参数第一个记成1，而不是0
+		        //$k+1: The first parameter is recorded as 1 instead of 0.
 		        array_push($posArr, ($k+1)) ;
 		    }
 		}
-		//将sink的类型拿到
+		//Get the type of sink
 		$posArr['type'] = $visitor->sinkType ;
 		return $posArr;
 	}
 	
 	
 	/**
-	 * 处理函数调用
-	 * @param node $node 调用方法的节点
-	 * @param BasicBlock $block 当前基本块
-	 * @param fileSummary $fileSummary  当前文件摘要
-	 */
+		* Processing function calls
+		* @param node $node the node that called the method
+		* @param BasicBlock $block current basic block
+		* @param fileSummary $fileSummary current file summary
+	*/
 	public function functionHandler($node, $block, $fileSummary){  
-	    //根据用户指定的扫描类型，查找相类型的sink函数
+	    //Find the sink function of the phase type according to the scan type specified by the user
 	    global $scan_type;
-	    //获取调用的函数名判断是否是sink调用
+	    //Get the name of the function called to determine whether it is a sink call
 	    $funcName = NodeUtils::getNodeFunctionName($node);
-	    //判断是否为sink函数,返回格式为array(true,funcname) or array(false)
+	    //Determine whether it is a sink function, the return format is array (true, funcname) or array (false)
 	    $ret = NodeUtils::isSinkFunction($funcName, $scan_type);
 
 	    if($ret[0] != null && $ret[0] === true){
-	        //如果发现了sink调用，启动污点分析
+	        //If you find a sink call, start taint analysis
 	        $analyser = new TaintAnalyser() ;
-	        //获取危险参数的位置
+	        //Get the location of the dangerous parameters
 	        $argPosition = NodeUtils::getVulArgs($node) ;
 	        if(count($argPosition) == 0){
 	            return ;
 	        }
-	        //获取到危险参数位置的变量
+	        //Get the variable to the location of the dangerous parameter
 	        $argArr = NodeUtils::getFuncParamsByPos($node, $argPosition);
-	        //遍历危险参数名，调用污点分析函数
+	        //Traverse the dangerous parameter name, call the taint analysis function
 	        if(count($argArr) > 0){
 	            foreach ($argArr as $item){
 	                if(is_array($item)){
@@ -516,7 +517,7 @@ class CFGGenerator{
 	            	
 	        }
 	    }else{
-	        //如果不是sink调用，启动过程间分析
+	        //If not sink call, start process analysis
 	        $context = Context::getInstance() ;
             $funcBody = $context->getClassMethodBody(
             	$funcName,
@@ -531,26 +532,26 @@ class CFGGenerator{
 	        	$funcBody->stmts = $funcBody->stmts[0] ;
 	        }
             
-	        //构建相应方法体的block和summary
+	        //Build the block and summary of the corresponding method body
 	        $nextblock = $this->CFGBuilder($funcBody->stmts, NULL, NULL, NULL) ;
             
-	        //ret危险参数的位置比如：array(0)
+	        //ret dangerous parameter location such as: array(0)
 	        $ret = $this->sinkFunctionHandler($funcBody, $nextblock, $block);
 	        
 	        if(!$ret){
 	            return ;
 	        }
   
-	        //找到了array('del',array(0)) ;
+	        //Found the array ('del', array (0));
 	        $userDefinedSink = UserDefinedSinkContext::getInstance() ;
 	        //$type应该从visitor中获取，使用$ret返回
 	        $type = $ret['type'] ;
 	        unset($ret['type']) ;
-	        //加入用户sink上下文
+	        //Add user sink context
 	        $item = array($funcName,$ret) ;
 	        $userDefinedSink->addByTagName($item, $type) ;
 	        
-	        //开始污点分析
+	        //Start taint analysis
             $argPosition = NodeUtils::getVulArgs($node) ;
             
             $argArr = NodeUtils::getFuncParamsByPos($node, $argPosition);	            
@@ -571,80 +572,82 @@ class CFGGenerator{
 	        }
 	    }
 	}
+	
+	
 	/**
-	 * 生成基本块摘要，为数据流分析做准备
-	 * 1、处理赋值语句
-	 * 2、记录全局变量定义
-	 * 3、记录全局变量注册
-	 * 4、记录返回值
-	 * 5、记录常量定义
-	 * @param BasicBlock $block
-	 */
+		* Generate basic block summary to prepare for data flow analysis
+		* 1, processing assignment statements
+		* 2, record global variable definition
+		* 3, record global variable registration
+		* 4, record the return value
+		* 5, record constant definition
+		* @param BasicBlock $block
+	*/
 	public function simulate($block){
-		//获取基本块中所有的节点
+		//Get all the nodes in the basic block
 		$nodes = $block->getContainedNodes() ;
-		//循环nodes集合，搜集信息加入到blocksummary中
+		//Loop the nodes collection, collect information into the blocksummary
 		foreach ($nodes as $node){
 		    if($node->getType() == 'Expr_ErrorSuppress'){
 		        $node = $node->expr ;
 		    }
 			switch ($node->getType()){
-				//处理赋值语句			
+				//Processing assignment statements			
 				case 'Expr_Assign':  
 					$dataFlow = new DataFlow() ;
 					$this->assignHandler($node, $block,$dataFlow,"left") ;
 					$this->assignHandler($node, $block,$dataFlow,"right") ;
 					break ;
 				
-				//处理foreach，转换为summary中的赋值
+				//Processing foreach, converted to assignment in the summary
 				case 'Stmt_Foreach':
 					$this->foreachHandler($block, $node) ;
 					break ;
 				
-				//处理字符串连接赋值
-				//$sql .= "from users where"生成sql => "from users where"
+				//Handle string connection assignment
+				//$sql .= "from users where" generates sql => "from users where"
 				case 'Expr_AssignOp_Concat': 
 					$dataFlow = new DataFlow() ;
 					$this->assignConcatHandler($node, $block,$dataFlow,"left") ;
 					$this->assignConcatHandler($node, $block,$dataFlow,"right") ;
 					break ;
 				
-				//处理常量，加入至summary中
-				//应该使用define判断
+				// Handle the constant, add to the summary
+				// should use define to judge
 				case 'Expr_FuncCall' && (NodeUtils::getNodeFunctionName($node) == "define"):
 					$this->constantHandler($node, $block,"define") ;
 					break ;
 				
-				//处理const关键定义的常量
+				//Handling const key definition constants
 				case 'Stmt_Const':
 					$this->constantHandler($node, $block,"const") ;
 					break ;
 				
-				//处理全局变量的定义，global $a
+				//Handle the definition of global variables, global $a
 				case 'Stmt_Global':
 					$this->globalDefinesHandler($node, $block) ;
 					break ;
 					
-				//过程内分析时记录
+				//In-process analysis record
 				case 'Stmt_Return':
 					$this->returnValueHandler($node, $block) ;
 					break ;
 				
-				//全局变量的注册extract,import_request_variables
-				//识别净化值
+				// Global variable registration extract, import_request_variables
+				// Identify the purification value
 				case 'Expr_FuncCall' && 
 				     (NodeUtils::getNodeFunctionName($node) == "import_request_variables" || 
 				     NodeUtils::getNodeFunctionName($node) == "extract") :
 					$this->registerGlobalHandler($node, $block) ;
 					break ;
 					
-				//如果$GLOBALS['name'] = 'xxxx' ;  则并入registerGlobal中
+				//If $GLOBALS['name'] = 'xxxx' ; then merge into registerGlobal
 				case 'Expr_ArrayDimFetch' && (substr(NodeUtils::getNodeStringName($node),0,7) == "GLOBALS"):
 				    $this->registerGLOBALSHandler($node, $block);
 				    break;
 				    
-				//处理函数调用以及类方法的调用
-				//过程间分析以及污点分析
+				// Handle function calls and calls to class methods
+				// Interprocess analysis and stain analysis
 				case 'Expr_MethodCall':
 				case 'Expr_Include':
                 case 'Expr_StaticCall':
@@ -668,90 +671,82 @@ class CFGGenerator{
 		
 	}
 	
+	
 	/**
-	 * 由AST节点创建相应的CFG，用于后续分析
-	 * 
-	 * @param Node $nodes  传入的PHP file的所有nodes
-	 * @param $condition   构建CFGNode时的跳转信息
-	 * @param BasicBlock $pEntryBlock   入口基本块
-	 * @param $pNextBlock   下一个基本块
-	 */
+		* Create the corresponding CFG from the AST node for subsequent analysis
+		*
+		* @param Node $nodes all nodes of the incoming PHP file
+		* @param $condition Jump information when building CFGNode
+		* @param BasicBlock $pEntryBlock entry basic block
+		* @param $pNextBlock next basic block
+	*/
 	public function CFGBuilder($nodes,$condition,$pEntryBlock,$pNextBlock){
-		//此文件的fileSummary
+		//fileSummary of this file
 		global $JUMP_STATEMENT,$LOOP_STATEMENT,$STOP_STATEMENT,$RETURN_STATEMENT ;
 		$currBlock = new BasicBlock() ;
 		
-		//创建一个CFG节点的边
+		//Create a side of a CFG node
 		if($pEntryBlock){
 			$block_edge = new CFGEdge($pEntryBlock, $currBlock,$condition) ;
 			$pEntryBlock->addOutEdge($block_edge) ;
 			$currBlock->addInEdge($block_edge) ;
 		}
 		
-		//处理只有一个node节点，不是数组
+		//Handle only one node node, not an array
         if (!is_array($nodes)){
             $nodes = array($nodes);
         }
         
-		//迭代每个AST node
+		//Iterate each AST node
 		foreach($nodes as $node){
-			//搜集节点中的require include require_once include_once的PHP文件名称
+			//Collect the require include_once include_once PHP file name in the node
 			$this->fileSummary->addIncludeToMap(NodeUtils::getNodeIncludeInfo($node)) ;
 			
 			if(!is_object($node)) continue ;
 			
-			//不分析函数定义
+			//Do not analyze function definitions
 			if($node->getType() == "Stmt_Function"){
 				continue ;
 			}
 			
-			//如果节点是跳转类型的语句
+			//If the node is a jump type statement
 			if(in_array($node->getType(), $JUMP_STATEMENT)){
-				//生成基本块的摘要
+				//Generate a summary of the basic block
 				$this->simulate($currBlock) ;
 				$nextBlock = new BasicBlock() ;
-				//对每个分支，建立相应的基本块
+				//For each branch, establish the corresponding basic block
 				$branches = $this->getBranches($node) ;
 				foreach ($branches as $b){
 					$this->CFGBuilder($b->nodes, $b->condition, $currBlock, $nextBlock)	;				
 				}
 				$currBlock = $nextBlock ;
 				
-			//如果节点是循环语句
+			//If the node is a loop statement
 			}elseif(in_array($node->getType(), $LOOP_STATEMENT)){  
-				//加入循环条件
+				//Add a loop condition
 				$this->addLoopVariable($node, $currBlock) ;
 				$this->simulate($currBlock) ;
-				//处理循环体
+				//Processing the loop body
 				$nextBlock = new BasicBlock() ;
 				$this->CFGBuilder($node->stmts, NULL, $currBlock, $nextBlock) ;
 				$currBlock = $nextBlock ;
 			
-			//如果节点是结束语句 throw break continue
+			//If the node is the end statement throw break continue
 			}elseif(in_array($node->getType(), $STOP_STATEMENT)){
 				$currBlock->is_exit = true ;
 				break ;
 			
-			//如果节点是return
+			//If the node is return
 			}elseif(in_array($node->getType(),$RETURN_STATEMENT)){
 				$currBlock->addNode($node) ;
 				$this->simulate($currBlock) ;
-				//print_r($currBlock->getBlockSummary()) ;
 				return $currBlock ;
 			}else{
 			    $currBlock->addNode($node);
-			    //print_r($currBlock->getBlockSummary()) ;
 			}
 		}
 		
 		$this->simulate($currBlock) ;
-		
-		//echo  "当前基本块:<br/>" ;
-		//print_r($currBlock) ;
-		//echo "前驱基本块：<br/>" ;
-		//$analyser = new TaintAnalyser() ;
-		//$analyser->getPrevBlocks($currBlock) ;
-		//print_r($analyser->getPathArr()) ;
 		
 		if($pNextBlock && !$currBlock->is_exit){
 			$block_edge = new CFGEdge($currBlock, $pNextBlock) ;
@@ -763,309 +758,4 @@ class CFGGenerator{
 	}
 	
 }
-/**
- * 跳转语句的分支结构类
- * @author Administrator
- *
- */
-class Branch{
-	public $condition ;   //跳转条件
-	public $nodes ;       //包含的节点
-	
-	/**
-	 * 构造函数
-	 * @param $cond  跳转的条件
-	 * @param $nodes 分支中携带的所有nodes
-	 */
-	public function __construct($cond, $nodes){
-		$this->condition = array($cond) ;
-		if(is_array($nodes)){
-			$this->nodes = $nodes ;
-		}else{
-			$this->nodes = array($nodes) ;
-		}
-		
-		
-		//将跳转的条件也加入至nodes中
-		if(is_array($this->condition)){
-			foreach ($this->condition as $cond){
-				array_unshift($this->nodes, $cond) ;
-			}
-		}else{
-			array_unshift($this->nodes, $this->condition) ;
-		}
-	}
-	
-}
-/**
- * 获取PHP File中所有的AST节点的访问者
- * @author Administrator
- *
- */
-class MyVisitor extends PhpParser\NodeVisitorAbstract{
-	private $nodes = array();
-	
-	public function beforeTraverse(array $nodes){
-		$this->nodes = $nodes ;
-	}
-	
-	//getter
-	public function getNodes(){
-		return $this->nodes ;
-	}
-	
-}
-/**
- * 用来遍历LogicalOr节点，并将所有的分支分离出来
- * @author Administrator
- *
- */
-class BranchVisitor extends PhpParser\NodeVisitorAbstract{
-	public $branches = array() ;
-	/**
-	 * 将or表达式的分支分离成分支数组
-	 * @param $node  LogicalOr节点
-	 * @return $branches 分支数组
-	 */
-	public function leaveNode(Node $node) {
-		if($node instanceof PhpParser\Node\Expr\BinaryOp\LogicalOr){
-			if(!($node->left instanceof PhpParser\Node\Expr\BinaryOp\LogicalOr) && 
-			    !($node->right instanceof PhpParser\Node\Expr\BinaryOp\LogicalOr)){
-			    $left_branch = new Branch("if", $node->left) ;
-			    $right_branch = new Branch("else", $node->right) ;
-				array_push($this->branches,$left_branch) ;
-				array_push($this->branches,$right_branch) ;
-			}else{
-				if(!($node->left instanceof PhpParser\Node\Expr\BinaryOp\LogicalOr)){
-				    $left_branch = new Branch("if", $node->left) ;
-					array_push($this->branches,$left_branch) ;
-				}elseif(!($node->right instanceof PhpParser\Node\Expr\BinaryOp\LogicalOr)){
-				    $right_branch = new Branch("else", $node->right) ;
-					array_push($this->branches,$right_branch) ;
-				}
-			}
-		}
-	}
-	
-}
-
-
-
-
-class nodeFunctionVisitor extends PhpParser\NodeVisitorAbstract{
-    public $block;
-    public $fileSummary;
-    public $cfgGen;
-    
-    public function leaveNode(Node $node){
-        //处理过程间代码，即调用的方法定义中的源码
-        $this->cfgGen->functionHandler($node, $this->block, $this->fileSummary);
-    }
-}
-
-/**
- * 处理方法调用
- * @author Exploit
- *
- */
-class FunctionVisitor extends PhpParser\NodeVisitorAbstract{
-	public $posArr ;   //参数列表
-	public $block ;  //当前基本块
-	public $vars = array();    //返回的数据array()
-	public $sinkType ;   //返回的sink类型
-	public $sinkContext ;   // 当前sink上下文
-	public $fileSummary ;
-	public $scan_type;
-	
-	public function leaveNode(Node $node){
-		//处理过程间代码，即调用的方法定义中的源码
-	    if(($node->getType() == 'Expr_FuncCall' || 
-		    $node->getType() == 'Expr_MethodCall' || 
-		    $node->getType() == 'Expr_StaticCall')){
-			//获取到方法的名称
-			$nodeName = NodeUtils::getNodeFunctionName($node);
-			$ret = NodeUtils::isSinkFunction($nodeName,$this->scan_type);
-			//进行危险参数的辨别
-			if($ret[0] == true){
-				//处理系统内置的sink
-				//找到了mysql_query
-				$cfg = new CFGGenerator() ;
-				
-				//array(where)找到危险参数的位置
-				$args = $ret[1];
-				if (is_array($args[0])){
-				    $args = $args[0];
-				}
-				$vars = $this->senstivePostion($node,$this->block,$args) ;  
-				$type = TypeUtils::getTypeByFuncName($nodeName) ;
-				
-				if($vars){
-					//返回处理结果，将多个相关变量位置返回
-					$this->vars = array_merge($this->vars, $vars);
-				}
-				
-				if($type){
-					//返回sink类型
-					$this->sinkType = $type ;
-				}
-			}elseif(array_key_exists($nodeName,$this->sinkContext->getAllSinks())){
-			    //处理已经加入sinksContext用户自定义函数
-				//处理用户定义的sink
-				$type = TypeUtils::getTypeByFuncName($nodeName) ;
-				if($type){
-					//返回sink类型
-					$this->sinkType = $type ;
-				}
-				
-				$context = Context::getInstance() ;
-				$funcName = NodeUtils::getNodeFunctionName($node);
-			    $funcBody = $context->getClassMethodBody(
-			        $funcName,
-			        $this->fileSummary->getPath(),
-			        $this->fileSummary->getIncludeMap()
-			    );
-			    
-			    if(!$funcBody) return;
-			    $cfg = new CFGGenerator();
-			    //$this->block->function[$nodeName]
-			    $arr = $this->sinkContext->getAllSinks() ;
-			    $arr = $arr[$nodeName] ;
-			    foreach ($arr as $pos){
-			        $argName = NodeUtils::getNodeFuncParams($node);
-			        $argName = $argName[$pos] ;
-			        $this->vars = $this->sinkMultiBlockTraceback($argName, $this->block,0);			        
-			    }
-			}else {
-                ;
-			}
-		}
-	}
-	
-	/**
-	 * sink多块回溯
-	 * @param string $argName
-	 * @param BasicBlock $block
-	 * @param flowNum 遍历过的flow数量
-	 * @return array
-	 */
-	public function sinkMultiBlockTraceback($argName,$block,$flowsNum=0){
-	    $mulitBlockHandlerUtils = new multiBlockHandlerUtils($block);
-	    $blockList = $mulitBlockHandlerUtils->getPathArr();
-
-	    $flows = $block->getBlockSummary()->getDataFlowMap();
-	    //当前块flows没有遍历完
-	    if(count($flows) != $flowsNum)
-	        return $this->sinkTracebackBlock($argName, $block, $flowsNum);
-	    
-	    if($blockList == null || count($blockList) == 0){
-            return  array($argName);
-	    }
-	    if(!is_array($blockList[0])){
-	        //如果不是平行结构
-	        $flows = $block->getBlockSummary()->getDataFlowMap();
-	        if(count($flows) == $flowsNum){
-	            $block = $blockList[0];
-	            $ret = $this->sinkTracebackBlock($argName, $block, 0);
-	            return $ret;
-	        }
-	        $ret = $this->sinkTracebackBlock($argName, $block, 0);
-	        return $ret;
-	    }else{
-	        //平行结构
-	        //当遇到sink函数时回溯碰到平行结构，那么遍历平行结构，将所有危险的相关变量全部记录下来
-	        $retarr = array();
-	        foreach ($blockList[0] as $block){
-	            $ret = array();
-	            $ret = $this->sinkTracebackBlock($argName, $block, 0);
-	            $retarr = array_merge($retarr, $ret);
-	        }
-	        return $retarr;
-	        
-	    }
-	}
-	
-	/**
-	 * 获取敏感sink的参数对应的危险参数
-	 * 如 :mysql_query($sql)
-	 * 返回sql
-	 * @param Node $node
-	 * @param BasicBlock $block
-	 * @return Ambigous <multitype:, multitype:string >
-	 */
-	public function senstivePostion($node,$block, $args){
-	    $ret = array();
-	    //得到sink函数的参数位置(1)
-	    //$args = array(0) ;  //1  => mysql_query
-	    foreach($args as $arg){
-	        //args[$arg-1] sinks函数的危险参数位置商量调整
-	        if ($arg > 0){
-	            if(count($node->args) > 0){
-	                $argNameStr = NodeUtils::getNodeStringName($node->args[$arg-1]) ;   //sql
-	                $ret = $this->sinkMultiBlockTraceback($argNameStr ,$block,0);  //array(where,id)
-	            }
-	            
-	        }
-	    }
-	    return $ret ;
-	}
-	
-	/**
-	 * sink单块回溯
-	 * @param string $argName
-	 * @param BasicBlock $block
-	 * @param flowNum 遍历过的flow数量
-	 * @return array
-	 */
-	public function sinkTracebackBlock($argName,$block,$flowsNum){
-	    $flows = $block->getBlockSummary()->getDataFlowMap();
-	    //需要将遍历过的dataflow删除
-	    $temp = $flowsNum;
-	    while ($temp>0){
-	        array_pop($flows);
-	        $temp --;
-	    }
-	    //将块内数据流逆序，从后往前遍历
-	    $flows = array_reverse($flows);
-	
-	    foreach($flows as $flow){
-	        $flowsNum ++;
-	        //trace back
-	        if($flow->getName() == $argName){
-	            //处理净化信息
-	            if ($flow->getLocation()->getSanitization()){
-	                return "safe";
-	            }
-	            //得到flow->getValue()的变量node
-	            //$sql = $a . $b ;  =>  array($a,$b)
-	            if($flow->getValue() instanceof ConcatSymbol){
-	                $vars = $flow->getValue()->getItems();
-	            }else{
-	                $vars = array($flow->getValue()) ;
-	            }
-	            $retarr = array();
-	            foreach($vars as $var){
-	                $var = NodeUtils::getNodeStringName($var);
-	                $ret = $this->sinkMultiBlockTraceback($var,$block,$flowsNum);
-	                //变量经过净化，这不需要跟踪该变量
-	                if ($ret == "safe"){
-	                    $retarr = array_slice($retarr, array_search($var,$retarr));
-	                }else{
-	                    $retarr = array_merge($ret,$retarr) ;
-	                }
-	            }
-	            return $retarr;
-	        }
-	        	
-	    }
-	    if ($argName instanceof Node){
-	        $argName = NodeUtils::getNodeStringName($argName);
-	        return array($argName);
-	    }
-	    return $this->sinkMultiBlockTraceback($argName, $block,$flowsNum);
-	    
-	}
-}
-
-
-
 ?>

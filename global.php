@@ -41,6 +41,8 @@ require_once CURR_PATH . '/conf/securing.php';
 
 require_once CURR_PATH . '/analyser/TaintAnalyser.class.php';
 
+require_once CURR_PATH . '/new/RecursiveTraverser.class.php';
+
 require_once CURR_PATH . '/libs/Smarty_setup.php';
 
 require_once CURR_PATH . '/CFGGenerator.php';
@@ -53,5 +55,10 @@ ini_set('xdebug.max_nesting_level', 1000);
 ini_set("max_execution_time", "0");
 //设置内存限制大小
 ini_set('memory_limit', '1000M') ;
+
+$RETURN_STATEMENT = array('Stmt_Return') ;
+$STOP_STATEMENT = array('Stmt_Throw','Stmt_Break','Stmt_Continue') ;
+$LOOP_STATEMENT = array('Stmt_For','Stmt_While','Stmt_Foreach','Stmt_Do') ;
+$JUMP_STATEMENT = array('Stmt_If','Stmt_Switch','Stmt_TryCatch','Expr_Ternary','Expr_BinaryOp_LogicalOr') ;
 
 ?>

@@ -1,29 +1,25 @@
 <?php
 use PhpParser\Node;
-/**
- * NodeUtils类主要对node节点的辅助
- * @author xyw55
- *
- */
+/** 
+  * NodeUtils class mainly assists node nodes 
+  * @author xyw55 
+  * 
+ */ 
 class NodeUtils{
-    /**
-     * 给定一个节点，返回该节点对应string name
-     * @param Node $node
-     * @return base node name string
-     */
+    /** 
+	  * Given a node, return the corresponding string name of the node 
+	  * @param Node $node 
+	  * @return base node name string 
+	*/ 
     public static function getNodeStringName($node) {
         if (!$node instanceof Node){
             return null;
         }
         $type = $node->getType();
-		error_log($type,3,'error.log');
-		ob_start();
-		print_r($node);
-		error_log(ob_get_clean(),3,'error.log');
+
         switch ($type) {    
             case "Expr_Variable":
             case "Scalar_String":
-				return $node->value;
             case "Scalar_LNumber":
             case "Scalar_DNumber":
                 if($node->name){
@@ -34,7 +30,7 @@ class NodeUtils{
                     return($node->$name);
                 }
                 break;
-            //负数
+            //negative 
             case "Expr_UnaryMinus":
                 $names = $node->getSubNodeNames();
                 //print_r($node->getSubNodeNames());
@@ -60,13 +56,13 @@ class NodeUtils{
                         return($parts);
                 break;
                        
-            //$a[],$[a]$a[]][]    
+            //$a[], $[a]$a[]][]     
             case "Expr_ArrayDimFetch":
                 //处理GLOBALS
                 if($node->var->name == "GLOBALS"){
                     return $node->dim->value; 
                 }
-            	//不处理_GET _POST等
+            	//Do not handle _GET _POST, etc. 
             	$userInput = Sources::getUserInput() ;
             	if(in_array($node->var->name, $userInput)){
             		return $node->var->name ;
@@ -87,14 +83,14 @@ class NodeUtils{
                 }
                 return $temp;
                 break;
-            //数组dim
+            //Array dim 
             case "Expr_ConstFetch":
                 $names = $node->getSubNodeNames();
                 //print_r($names);
                 foreach ($names as $name)
                     return NodeUtils::getNodeStringName($node->$name);
                 break;
-            //$this->property对象属性
+            //$this->property object property 
             case "Expr_PropertyFetch":
                 $names = $node->getSubNodeNames();
                 $ret = '';
@@ -110,11 +106,11 @@ class NodeUtils{
         return "";
     }
     
-    /**
-     * $GLOBALS["first"]["second"]["third"] =>first[second][third]
-     * @param Node $node
-     * @return GLOBALS注册的变量名
-     */
+    /** 
+	  * $GLOBALS["first"]["second"]["third"] =>first[second][third] 
+	  * @param Node $node 
+	  * @return GLOBALS registered variable name 
+	 */ 
     public static function getNodeGLOBALSNodeName($node){
         if (!$node instanceof Node){
             return null;
@@ -126,11 +122,12 @@ class NodeUtils{
         return NodeUtils::getNodeStringName($node->dim);
        
     }
-    /**
-     * 给定一个节点，返回该节点对应function name,如果是类方法调用，返回类名:方法名
-     * @param Node $node
-     * @return function name
-     */
+    
+	/** 
+	  * Given a node, return the node corresponding function name, if it is a class method call, return the class name: method name 
+	  * @param Node $node 
+	  * @return function name 
+	 */ 
     public static function getNodeFunctionName($node){
         if (!$node instanceof Node){
             return null;
@@ -165,11 +162,11 @@ class NodeUtils{
                 $methodName = $node->name;
                 return "$objectName:$methodName";
                 break;
-            //匿名函数
+            //Anonymous function 
             case "Expr_Closure":
                 return "";
                 break;
-            //echo和print比较特殊，单独处理
+            //echo and print are special, handled separately
             case "Stmt_Echo":
             	return "echo" ;
             	break;
@@ -190,11 +187,12 @@ class NodeUtils{
                 break;
         }
     }
-    /**
-     * 给定一个节点，返回该节点对应class name,
-     * @param Node $node
-     * @return class name
-     */
+   
+    /** 
+	  * Given a node, return the corresponding class name of the node, 
+	  * @param Node $node 
+	  * @return class name 
+	 */ 
     public static function getNodeClassName($node){
         if (!$node instanceof Node){
             return null;
@@ -216,10 +214,10 @@ class NodeUtils{
         }
     }
     
-    /**
-     * 获取concat中的所有变量名
-     * @param Node $node
-     */
+    /** 
+	  * Get all variable names in concat 
+	  * @param Node $node 
+	 */ 
     private static function getConcatParams($node){
     	$retArr = array() ;
     	if($node->getType() != "Expr_BinaryOp_Concat"){
@@ -239,10 +237,10 @@ class NodeUtils{
     }
     
     
-    /**
-     * 获取concat中的所有变量名
-     * @param Node $node
-     */
+    /** 
+	  * Get all variable names in concat 
+	  * @param Node $node 
+	 */ 
     private static function getConcatParamsNode($node){
         $retArr = array() ;
         if($node->getType() != "Expr_BinaryOp_Concat"){
@@ -261,11 +259,11 @@ class NodeUtils{
         return $retArr ;
     }
     
-    /**
-     * 获取函数的参数名称
-     * @param Node $node 函数调用的node
-     * @return array(arg1[,arg2,arg3,...])
-     */
+    /** 
+	  * Get the parameter name of the function 
+	  * @param Node $node function called node 
+	  * @return array(arg1[,arg2,arg3,...]) 
+	 */ 
     public static function getFuncParamsNode($node){
         if (!$node instanceof Node){
             return null;
@@ -301,17 +299,17 @@ class NodeUtils{
     
     
     
-    /**
-     * 获取函数的参数名称
-     * @param Node $node 函数调用的node
-     * @return array(arg1[,arg2,arg3,...])
-     */
+    /** 
+	  * Get the parameter name of the function 
+	  * @param Node $node function called node 
+	  * @return array(arg1[,arg2,arg3,...]) 
+	 */ 
     public static function getNodeFuncParams($node){
     	if (!$node instanceof Node){
     		return null;
     	}
 		
-    	//支持echo和print
+    	//Support echo and print 
     	$funcName = self::getNodeFunctionName($node) ;
     	if($funcName == "echo"){
     		$ret = array() ;
@@ -378,11 +376,11 @@ class NodeUtils{
     	    return $ret ;
     	}
     	
-    	//处理其他的函数
+    	//Handle other functions 
     	$argsArr = array();
     	if (property_exists($node, 'args')){
     	    foreach ($node->args as $arg){
-    	    	//如果为concat类型
+    	    	//If the concat type
     	    	if($arg->value->getType() == "Expr_BinaryOp_Concat"){
     	    		$concatArr = self::getConcatParams($arg->value) ;
     	    		array_push($argsArr, $concatArr);
@@ -403,12 +401,12 @@ class NodeUtils{
     	return $argsArr;
     }
     
-    /**
-     * 根据参数的位置，返回参数的名称
-     * @param Node $node
-     * @param array $argsPos
-     * @return array
-     */
+    /** 
+	  * Returns the name of the parameter based on the location of the parameter 
+	  * @param Node $node 
+	  * @param array $argsPos 
+	  * @return array 
+	 */ 
     public static function getFuncParamsByPos($node,$argsPos){
     	if ((!$node instanceof Node) || !$argsPos){
     		return null;
@@ -422,25 +420,25 @@ class NodeUtils{
     	$retArr = array() ;
     	$argNum = count($argsNameArr);
     	if($argNum > 0){
-	        //类方法判别时，argsPos[0]为array
+	        //class method discriminate, argsPos[0] is array 
 	        if(is_array($argsPos[0])){
 	            foreach ($argsPos[0] as $value){
 	                if ($value > $argNum)
 	                    continue ;
-    				//sink是从索引1开始的
-    				//如果参数位置为0，如echo，则不做处理
+    				// sink is starting from index 1. 
+					// If the parameter position is 0, such as echo, it will not be processed 
     				if($value != 0){
     				    $value -= 1 ;
     				}
     				array_push($retArr,$argsNameArr[$value]) ;
 	            }
 	        }else{
-	            //普通方法判断时，argsPos为array
+	            //Ordinary method to judge, argsPos is array 
 	            foreach ($argsPos as $value){
 	                if ($value > $argNum)
 	                    continue ;
-    				//sink是从索引1开始的
-    				//如果参数位置为0，如echo，则不做处理
+    				// sink is starting from index 1. 
+					// If the parameter position is 0, such as echo, it will not be processed
     				if($value != 0){
     				    $value -= 1 ;
     				}
@@ -459,17 +457,22 @@ class NodeUtils{
     
     
     
-	/**
-	 * 从传入节点中提取出包含的PHP文件名称
-	 * @param Node $node
-	 * @return string
+	/** 
+	  * Extract the included PHP file name from the incoming node 
+	  * @param Node $node 
+	  * @return string 
 	 */
     public static function getNodeIncludeInfo($node){
         if (!$node instanceof Node){
             return null;
         }
 		if($node->getType() == "Expr_Include"){
-			$parser = new PhpParser\Parser(new PhpParser\Lexer\Emulative) ;
+			$lexer = new PhpParser\Lexer(array(
+				'usedAttributes' => array(
+					'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+				)
+			));
+			$parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 			$traverser = new PhpParser\NodeTraverser;
 			$visitor = new IncludeVisitor() ;
 			$traverser->addVisitor($visitor) ;
@@ -486,21 +489,21 @@ class NodeUtils{
     }
     
     
-	/**
-	 * 根据函数名称，检测是否为sink函数
-	 * @param string $funcName
-	 * @return array(is_sink,args_position)
-	 */
+	/** 
+	  * Detect if it is a sink function according to the function name 
+	  * @param string $funcName 
+	  * @return array(is_sink, args_position) 
+	 */ 
     public static function isSinkFunction($funcName, $scanType){
     	global $F_SINK_ALL, $F_SINK_ARRAY ;
     	$nameNum = count($F_SINK_ARRAY);
     	$userDefinedSink = UserDefinedSinkContext::getInstance() ;
     	$U_SINK_ALL = $userDefinedSink->getAllSinks() ;
 
-    	//根据scanType,查找sink函数
+    	//According to scanType, find the sink function 
     	switch ($scanType){
     	    case 'ALL':
-            	//如果是系统的sink
+            	//If it is the sink of the system 
             	if(key_exists($funcName, $F_SINK_ALL)){
             		for($i = 0;$i < $nameNum; $i++){
         		    	if(key_exists($funcName, $F_SINK_ARRAY[$i])){
@@ -510,7 +513,7 @@ class NodeUtils{
             		return array(false);
             	}
             	
-            	//如果是用户的sink
+            	//If it is the user's sink
             	if(key_exists($funcName, $U_SINK_ALL)){
             		foreach ($userDefinedSink->getAllSinkArray() as $value){
             			if(key_exists($funcName, $value)){
@@ -522,12 +525,12 @@ class NodeUtils{
             	break;
             case 'SERVER':
         	    global $F__SINK_SERVER;
-            	//如果是系统的sink
+            	//If it is the sink of the system 
     	       if (key_exists($funcName, $F__SINK_SERVER)){
                     return array(true, $F__SINK_SERVER[$funcName][0]);
                 }
         	
-            	//如果是用户的sink
+            	//If it is the user's sink 
             	if(key_exists($funcName, $U_SINK_ALL)){
             		foreach ($userDefinedSink->getServerSinkArray() as $value){
             			if(key_exists($funcName, $value)){
@@ -539,11 +542,11 @@ class NodeUtils{
         	    break;
             case 'CLIENT':
                 global $F_SINK_CLIENT;
-                //如果是系统的sink
+                //If it is the sink of the system 
                 if (key_exists($funcName, $F_SINK_CLIENT)){
                     return array(true, $F_SINK_CLIENT[$funcName][0]);
                 }
-                //如果是用户的sink
+                //If it is the user's sink 
             	if(key_exists($funcName, $U_SINK_ALL)){
             		foreach ($userDefinedSink->getClientSinkArray() as $value){
             			if(key_exists($funcName, $value)){
@@ -555,11 +558,11 @@ class NodeUtils{
                 break;
 	        case 'XSS':
 	            global $F_XSS;
-	            //如果是系统的sink
+	            //If it is the sink of the system 
 	            if (key_exists($funcName, $F_XSS)){
 	                return array(true, $F_XSS[$funcName][0]);
 	            }
-	            //如果是用户的sink
+	            //If it is the user's sink 
 	            if (key_exists($funcName, $userDefinedSink->getF_XSS())){
 	                return array(true,$U_SINK_ALL[$funcName]) ;
 	            }
@@ -567,11 +570,11 @@ class NodeUtils{
 	            break;
             case 'SQLI':
                 global $F_DATABASE;
-                //如果是系统的sink
+                //If it is the sink of the system
                 if (key_exists($funcName, $F_DATABASE)){
                     return array(true, $F_DATABASE[$funcName][0]);
                 }
-                //如果是用户的sink
+                //If it is the user's sink 
                 if (key_exists($funcName, $userDefinedSink->getF_DATABASE())){
                     return array(true,$U_SINK_ALL[$funcName]) ;
                 }
@@ -579,11 +582,11 @@ class NodeUtils{
                 break;
             case 'HTTPHEADER':
                 global $F_HTTP_HEADER;
-                //如果是系统的sink
+                //If it is the sink of the system 
                 if (key_exists($funcName, $F_HTTP_HEADER)){
                     return array(true, $F_HTTP_HEADER[$funcName][0]);
                 }
-                //如果是用户的sink
+                //If it is the user's sink 
                 if (key_exists($funcName, $userDefinedSink->getF_HTTP_HEADER())){
                     return array(true,$U_SINK_ALL[$funcName]) ;
                 }
@@ -591,11 +594,11 @@ class NodeUtils{
                 break;
             case 'CODE':
                 global $F_CODE;
-                //如果是系统的sink
+                //If it is the sink of the system 
                 if (key_exists($funcName, $F_CODE)){
                     return array(true, $F_CODE[$funcName][0]);
                 }
-                //如果是用户的sink
+                //If it is the user's sink
                 if (key_exists($funcName, $userDefinedSink->getF_CODE())){
                     return array(true,$U_SINK_ALL[$funcName]) ;
                 }
@@ -603,11 +606,11 @@ class NodeUtils{
                 break;
             case 'EXEC':
                 global $F_EXEC;
-                //如果是系统的sink
+                //If it is the sink of the system 
                 if (key_exists($funcName, $F_EXEC)){
                     return array(true, $F_EXEC[$funcName][0]);
                 }
-                //如果是用户的sink
+                //If it is the user's sink 
                 if (key_exists($funcName, $userDefinedSink->getF_EXEC())){
                     return array(true,$U_SINK_ALL[$funcName]) ;
                 }
@@ -615,11 +618,11 @@ class NodeUtils{
                 break;
             case 'LDAP':
                 global $F_LDAP;
-                //如果是系统的sink
+                //If it is the sink of the system 
                 if (key_exists($funcName, $F_LDAP)){
                     return array(true, $F_LDAP[$funcName][0]);
                 }
-                //如果是用户的sink
+                //If it is the user's sink
                 if (key_exists($funcName, $userDefinedSink->getF_LDAP())){
                     return array(true,$U_SINK_ALL[$funcName]) ;
                 }
@@ -627,11 +630,11 @@ class NodeUtils{
                 break;
             case 'FILE_INCLUDE':
                 global $F_FILE_INCLUDE;
-                //如果是系统的sink
+                //If it is the sink of the system 
                 if (key_exists($funcName, $F_FILE_INCLUDE)){
                     return array(true, $F_FILE_INCLUDE[$funcName][0]);
                 }
-                //如果是用户的sink
+                //If it is the user's sink 
                 if (key_exists($funcName, $userDefinedSink->getF_FILE_INCLUDE())){
                     return array(true,$U_SINK_ALL[$funcName]) ;
                 }
@@ -639,11 +642,11 @@ class NodeUtils{
                 break;
             case 'FILE_READ':
                 global $F_FILE_READ;
-                //如果是系统的sink
+                //If it is the sink of the system 
                 if (key_exists($funcName, $F_FILE_READ)){
                     return array(true, $F_FILE_READ[$funcName][0]);
                 }
-                //如果是用户的sink
+                //If it is the user's sink 
                 if (key_exists($funcName, $userDefinedSink->getF_FILE_READ())){
                     return array(true,$U_SINK_ALL[$funcName]) ;
                 }
@@ -651,11 +654,11 @@ class NodeUtils{
                 break;
             case 'XPATH':
                 global $F_XPATH;
-                //如果是系统的sink
+                //If it is the sink of the system 
                 if (key_exists($funcName, $F_XPATH)){
                     return array(true, $F_XPATH[$funcName][0]);
                 }
-                //如果是用户的sink
+                //If it is the user's sink 
                 if (key_exists($funcName, $userDefinedSink->getF_XPATH())){
                     return array(true,$U_SINK_ALL[$funcName]) ;
                 }
@@ -663,11 +666,11 @@ class NodeUtils{
                 break;
             case 'FILE_AFFECT':
                 global $F_FILE_AFFECT;
-                //如果是系统的sink
+                //If it is the sink of the system 
                 if (key_exists($funcName, $F_FILE_AFFECT)){
                     return array(true, $F_FILE_AFFECT[$funcName][0]);
                 }
-                //如果是用户的sink
+                //If it is the user's sink 
                 if (key_exists($funcName, $userDefinedSink->getF_FILE_AFFECT())){
                     return array(true,$U_SINK_ALL[$funcName]) ;
                 }
@@ -679,10 +682,10 @@ class NodeUtils{
     	
     }
     
-    /**
-     * 判断方法是否是编码或者安全函数
-     * @param unknown $funcName
-     */
+    /** 
+	  * Determine if the method is an encoding or a security function 
+	  * @param unknown $funcName 
+	 */ 
     public static function isEncodeOrSecureFunction($funcName){
         global $F_SECURES_ALL, $F_ENCODING_STRING, $F_DECODING_STRING;
         $list = array_merge($F_SECURES_ALL, $F_ENCODING_STRING, $F_DECODING_STRING) ;
@@ -695,22 +698,22 @@ class NodeUtils{
     }
     
     
-	/**
-	 * 根据sink方法的名称获取危险参数的位置
-	 * 比如提交mysql_query的调用node，返回危险参数位置array(0)
-	 * 如果找不到，默认返回array()
-	 * @param Node $node
-	 */
+	/** 
+	  * Get the location of the dangerous parameter according to the name of the sink method 
+	  * For example, submit the call node of mysql_query, return the dangerous parameter position array(0) 
+	  * If not found, the default returns array() 
+	  * @param Node $node 
+	 */ 
     public static function getVulArgs($node){
     	global $F_SINK_ALL,$F_SINK_ARRAY ;
     	$funcName = NodeUtils::getNodeFunctionName($node) ;
     	$nameNum = count($F_SINK_ARRAY);
     	
-    	//从上下文中获取用户定义sink
+    	//Get the user-defined sink from the context 
     	$userDefinedSink = UserDefinedSinkContext::getInstance() ;
     	$U_SINK_ALL = $userDefinedSink->getAllSinks() ;
     	
-    	//如果是系统的sink
+    	//If it is the sink of the system 
     	if(key_exists($funcName, $F_SINK_ALL)){
     		for($i = 0;$i < $nameNum; $i++){
     			if(key_exists($funcName, $F_SINK_ARRAY[$i])){
@@ -720,7 +723,7 @@ class NodeUtils{
     		return array();
     	}
     	 
-    	//如果是用户的sink
+    	//If it is the user's sink 
     	if(key_exists($funcName, $U_SINK_ALL)){
     		foreach ($userDefinedSink->getAllSinkArray() as $value){
     			if(key_exists($funcName, $value)){
@@ -734,22 +737,6 @@ class NodeUtils{
     
     
 }
-
-
-
-/**
- * 用来遍历包含节点的辅助类
- * @author Exploit
- */
-class IncludeVisitor extends  PhpParser\NodeVisitorAbstract{
-	public $strings = array() ;
-	public function leaveNode(Node $node){
-		array_push($this->strings, NodeUtils::getNodeStringName($node)) ;
-	}
-}
-
-
-
 ?>
 
 

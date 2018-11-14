@@ -6,16 +6,16 @@ ini_set('xdebug.max_nesting_level', 2000);
 use PhpParser\Node;
 
 /**
- * 文件处理类
- * 
+ * File processing class
+ *
  * @author xyw55
- *        
+ *
  */
 class FileUtils{
-    /**
+   /**
      *
-     * @param php项目文件夹路径 $dirpath            
-     * @return array of phpfiles 
+     * @param php project folder path $dirpath
+     * @return array of phpfiles
      */
     public static function getPHPfile($dirpath){
         $ret = array();
@@ -31,7 +31,7 @@ class FileUtils{
             
         $dh = opendir($dirpath);
         while (($file = readdir($dh)) != false) {
-            // 文件名的全路径 包含文件名
+            // The full path of the file name contains the file name
             $filePath = $dirpath . "/" . $file;
             // echo $filePath."<br/>";
             if ($file == "." or $file == ".."){
@@ -57,8 +57,8 @@ class FileUtils{
     }
 
     /**
-     * 通过判断文件中Nodes的数量和class node和 function node数量比较，找出main php files
-     * @param  php项目文件夹路径$dirpath
+     * Find main php files by judging the number of Nodes in the file and the number of class nodes and function nodes
+     * @param php project folder path $dirpath
      * @return multitype:
      */
     public static function mainFileFinder($dirpath){
@@ -88,7 +88,7 @@ class FileUtils{
             if ($sumcount == 0){
                 continue;
             }
-            //暂时确定当比值小于0.6，为main php files
+            //Temporarily determined when the ratio is less than 0.6, for main php files
             if($count / $sumcount < 0.6){
                 array_push($should2parser, $file);
             }
@@ -99,16 +99,16 @@ class FileUtils{
     }
     
     /**
-     * require信息中，将相对路径转为绝对路径
-     * 如何处理同名文件
-     * @param string $filePath 当前文件路径
+     * require information, the relative path is converted to an absolute path
+     * How to handle files with the same name
+     * @param string $filePath current file path
      * @param string $rpath
      * @return string
      */
     public static function getAbsPath($filePath, $rpath){
     	global $project_path;
     	global $allFiles;
-    	//补全路径
+    	//Complete path
     	$currentDir = dirname($filePath);
     	$absPath = '';
 	    if(!strpbrk($rpath, '/')){
@@ -126,7 +126,7 @@ class FileUtils{
 	        }
 	        $absPath = $tempPath . '/' . $rpath;
 	    }
-	    //需要判断该文件是否存在，不存在则需要在工程中查找
+	    //Need to determine whether the file exists, if it does not exist, you need to find in the project
 	    if (is_file($absPath)){
 	        return $absPath;
 	    }else{
@@ -145,7 +145,7 @@ class FileUtils{
     
 
     /**
-     * 根据代码的路径，起始和终止行号获取相应的代码
+     * According to the path of the code, the start and end line numbers get the corresponding code
      * @param string $path
      * @param string $startLine
      * @param string $endLine
@@ -168,10 +168,10 @@ class FileUtils{
     }
     
     /**
-     * 递归获取文件夹下的所有PHP文件
-     * @param unknown $path
-     * @return multitype:
-     */
+      * Recursively get all PHP files under the folder
+      * @param unknown $path
+      * @return multitype:
+      */
     public static function getAllFiles($path){
         static $ret = array() ;
         if(!is_dir($path)){
@@ -198,60 +198,6 @@ class FileUtils{
         return $ret ;
     }
 
-}
-
-/**
- *
- * @author xyw55
- *        
- */
-class VisitorForLine extends PhpParser\NodeVisitorAbstract
-{
-    private $nodes = array();
-    private $count = 0;
-    public function beforeTraverse(array $nodes)
-    {
-        $this->nodes = $nodes;
-    }
-    public function enterNode(Node $node)
-    {
-        $type = $node->getType();
-        switch ($type) {
-            case "Stmt_Class":
-                $this->count= $this->count+2;
-                break;
-            case "Stmt_Function":
-                $this->count= $this->count+1;
-                break;
-            default:
-                ;
-                break;
-        }
-    }
-
-    
-    
-    
-    //-------------------gettetr && setter----------------------------
-    public function getNodes()
-    {
-        return $this->nodes;
-    }
-
-    public function getCount()
-    {
-        return $this->count;
-    }
-
-    public function setNodes($nodes)
-    {
-        $this->nodes = $nodes;
-    }
-
-    public function setCount($count)
-    {
-        $this->count = $count;
-    }
 }
 
 

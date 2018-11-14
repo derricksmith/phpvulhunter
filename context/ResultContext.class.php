@@ -1,10 +1,10 @@
 <?php
 
 /**
- * 该上下文类用来保存report函数报告的漏洞
- * @author Exploit
- *
- */
+  * This context class is used to save the vulnerability reported by the report function
+  * @author Exploit
+  *
+  */
 class ResultContext {
 	//单例
 	private static $instance ;  
