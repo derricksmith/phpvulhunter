@@ -603,6 +603,7 @@ class CFGGenerator{
 		        $node = $node->expr ;
 		    }
 			echo $node->getType()."<br />";
+			
 			switch ($node->getType()){
 				//Processing assignment statements			
 				case 'Expr_Assign':  
@@ -696,7 +697,7 @@ class CFGGenerator{
 				case 'Expr_Eval':
 					echo 'Expr_MethodCall or Expr_Include or Expr_StaticCall or Stmt_Echo or Expr_Print or Expr_FuncCall or Expr_Eval<br />';
 					print_r($node);
-					die();
+					
 					$this->functionHandler($node, $block, $this->fileSummary);
 					break ;
 				default:
