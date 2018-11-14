@@ -63,6 +63,11 @@ class NodeUtils{
             //$a[], $[a]$a[]][]     
             case "Expr_ArrayDimFetch":
                 //处理GLOBALS
+				if (property_exists($node->var,"name")){
+					echo "<pre>";
+					print_r($node);
+					die();
+				}
                 if($node->var->name == "GLOBALS"){
                     return $node->dim->value; 
                 }
