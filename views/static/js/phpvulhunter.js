@@ -70,12 +70,12 @@ $(function(){
 function scanCheck()
 {
 	if( !$('#file-path').val() ){
-		$('#err_cont').append('<span>请输入完整文件路径！</span>');
+		$('#err_cont').append('<span>Please enter the full file path!</span>');
         $('#err_cont').css({'display':'block'}).animate({'opacity':'1'},0.8);
 		return false;
 	}
     if( !$('#project-path').val() ){
-        $('#err_cont').append('<span>请输入文件所在工程路径！<br/><font size="3">若没有工程路径，则文件路径与工程路径相同。</font></span>');
+        $('#err_cont').append('<span>请输入文件所在工程路径！<br/><font size="3">If there is no project path, the file path is the same as the project path.</font></span>');
         $('#err_cont').css({'display':'block'}).animate({'opacity':'1'},0.8);
         return false;
     }
@@ -198,7 +198,6 @@ function sendScanReq()
         },
         success : function( data ){
             stopTimeCounter();
-			console.log(data);
             $('.timeused').html( 'Time Used : '+h+':'+m+':'+s+':'+ms );
             $('.waiting').css({'opacity':'0'});
             setTimeout(function(){
@@ -214,6 +213,7 @@ function sendScanReq()
             $('.content-panel').html(data_content);
             $('.count').html(data_count);
             addResultOnclidc();
+			console.log(data);
         },
         error :  function( jqXHR ){
             stopTimeCounter();
