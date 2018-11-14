@@ -71,7 +71,7 @@ class FileUtils{
 		));
 		$parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);      
         $traverser = new PhpParser\NodeTraverser();
-        $visitor = new VisitorForLine();
+        $visitor = new LineVisitor();
         $traverser->addVisitor($visitor);
         foreach ($files as $file) {
             $code = file_get_contents($file);
