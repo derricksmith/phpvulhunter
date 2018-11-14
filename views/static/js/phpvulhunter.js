@@ -209,7 +209,7 @@ function sendScanReq()
 {
     $.ajax({
         type : "POST",
-        url : "main.php",
+        url : "index.php",
         dataType : "text",
         data: {    // post的参数
             path :  $("#file-path").val(),
