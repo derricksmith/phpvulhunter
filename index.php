@@ -33,6 +33,7 @@ function load_file($path){
 	$pEntryBlock->is_entry = true ;
 	//开始分析
 	$cfg->CFGBuilder($nodes, NULL, NULL, NULL) ;
+	return $cfg->nodes;
 }
 
 /**
@@ -124,6 +125,7 @@ if (!is_file($serialPath)){
     $fileHandler = fopen($serialPath, 'w');
     fclose($fileHandler);
 }
+$nodes_array = array();
 $results = null;
 if(($serial_str = file_get_contents($serialPath)) != ''){
     $results = unserialize($serial_str) ;
@@ -136,12 +138,13 @@ if(($serial_str = file_get_contents($serialPath)) != ''){
     
     //4、循环每个文件  进行分析工作
     if(is_file($project_path)){
-    	load_file($project_path) ;
+    	$nodes = load_file($project_path) ;
     }elseif (is_dir($project_path)){
         $path_list = $mainlFiles;
     	foreach ($path_list as $path){
     		try{
-    		    load_file($path) ;
+    		    $nodes = load_file($path) ;
+				
     		}catch(Exception $e){
     			continue ;
     		}
@@ -151,6 +154,9 @@ if(($serial_str = file_get_contents($serialPath)) != ''){
     	echo "工程不存在!" ;
     	exit() ;
     }
+	if($nodes){
+		array_push($nodes_array, $nodes);
+	}
     
     //5、处理results 序列化
     $results = ResultContext::getInstance() ;
@@ -162,7 +168,7 @@ if(($serial_str = file_get_contents($serialPath)) != ''){
 //6、传给template
 $template_res = convertResults($results) ;
 $smarty->assign('results',$template_res);
-$smarty->assign('nodes',$cfg->nodes);
+$smarty->assign('nodes',$nodes_array);
 $smarty->display('content.html');
 
 ?>
