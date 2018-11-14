@@ -21,7 +21,6 @@ class NodeUtils{
             case "Expr_Variable":
 				echo "<pre>";
 				print_r($node);
-				print_
                 break;
             case "Scalar_String":
 				return NodeUtils::getNodeStringName($node->value);
