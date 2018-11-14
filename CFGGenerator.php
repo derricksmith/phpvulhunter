@@ -606,8 +606,6 @@ class CFGGenerator{
 			switch ($node->getType()){
 				//Processing assignment statements			
 				case 'Expr_Assign':  
-					print_r($node);
-					die();
 					$dataFlow = new DataFlow() ;
 					$this->assignHandler($node, $block,$dataFlow,"left") ;
 					$this->assignHandler($node, $block,$dataFlow,"right") ;
@@ -621,6 +619,8 @@ class CFGGenerator{
 				//Handle string connection assignment
 				//$sql .= "from users where" generates sql => "from users where"
 				case 'Expr_AssignOp_Concat':
+					print_r($node);
+					die();
 					$dataFlow = new DataFlow() ;
 					$this->assignConcatHandler($node, $block,$dataFlow,"left") ;
 					$this->assignConcatHandler($node, $block,$dataFlow,"right") ;
