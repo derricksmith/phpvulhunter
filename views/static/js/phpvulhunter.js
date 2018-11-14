@@ -210,8 +210,10 @@ function sendScanReq()
             }
             var data_content = /<ul id="content-box">[\s\S]+?<\/ul>/.exec(data);
             var data_count = /<div class="count-box">[\s\S]+?<\/div>/.exec(data);
+			var data_nodes = /<div class="nodes-box">[\s\S]+?<\/div>/.exec(data);
             $('.content-panel').html(data_content);
             $('.count').html(data_count);
+			$('.nodes-panel').html(data_nodes);
             addResultOnclidc();
         },
         error :  function( jqXHR ){
