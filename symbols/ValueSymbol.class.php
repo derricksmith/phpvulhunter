@@ -20,6 +20,7 @@ class ValueSymbol {
 			$names = $node->getSubNodeNames();
             foreach ($names as $name){
                 $this->value = $node->$name;
+				return;
             }
 		}
 		
