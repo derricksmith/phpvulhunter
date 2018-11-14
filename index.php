@@ -162,6 +162,7 @@ if(($serial_str = file_get_contents($serialPath)) != ''){
 //6、传给template
 $template_res = convertResults($results) ;
 $smarty->assign('results',$template_res);
+$smarty->assign('nodes',$cfg->nodes);
 $smarty->display('content.html');
 
 ?>

@@ -213,7 +213,6 @@ function sendScanReq()
             $('.content-panel').html(data_content);
             $('.count').html(data_count);
             addResultOnclidc();
-			console.log(data);
         },
         error :  function( jqXHR ){
             stopTimeCounter();

@@ -13,6 +13,8 @@ class CFGGenerator{
 	//Global filesummary object
 	private $fileSummary ;
 	
+	public $nodes;
+	
 	//constructor
 	public function __construct(){
 		$lexer = new PhpParser\Lexer(array(
@@ -23,6 +25,7 @@ class CFGGenerator{
 		$this->parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 		$this->traverser = new PhpParser\NodeTraverser ;
 		$this->fileSummary = new FileSummary() ;
+		$this->nodes = array();
 	}	
 	
 	//fileSummary get method
@@ -594,6 +597,7 @@ class CFGGenerator{
 	public function simulate($block){
 		//Get all the nodes in the basic block
 		$nodes = $block->getContainedNodes() ;
+		array_push($this->nodes,$nodes);
 		//Loop the nodes collection, collect information into the blocksummary
 		foreach ($nodes as $node){
 		    if($node->getType() == 'Expr_ErrorSuppress'){
