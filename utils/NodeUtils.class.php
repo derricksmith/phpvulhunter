@@ -43,10 +43,9 @@ class NodeUtils{
                 break;
             //param name
             case "Param":
-				if (property_exists($node, 'name')){
-					return $node->name;
-				}
-				return NodeUtils::getNodeStringName($node->var);
+				
+					return $node->$name;
+				
                 break;
             case "Name":
                 $names = $node->getSubNodeNames();
