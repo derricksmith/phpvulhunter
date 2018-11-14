@@ -605,7 +605,10 @@ class CFGGenerator{
 			echo $node->getType()."<br />";
 			
 			switch ($node->getType()){
-				//Processing assignment statements			
+				//Processing assignment statements	
+				case 'Expr':
+					echo 'Expr <br />';
+					print_r($node);
 				case 'Expr_Assign':  
 					echo 'Expr_Assign <br />';
 					print_r($node);
@@ -705,7 +708,7 @@ class CFGGenerator{
 					print_r($node);
 
 				    $traverser = new PhpParser\NodeTraverser;
-				    $visitor = new nodeFunctionVisitor() ;
+				    $visitor = new NodeFunctionVisitor() ;
 				    $visitor->block = $block;
 				    $visitor->fileSummary = $this->fileSummary;
 				    $visitor->cfgGen = new CFGGenerator();
