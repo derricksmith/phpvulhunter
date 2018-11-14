@@ -36,9 +36,9 @@ $(function(){
     $(".select-coding select option").click(function(){
     	$(".select-coding select").trigger('change');
     })
-    // select的相关操作 ----------------------------------------/**/
+    // related operations of select ----------------------------------------/**/
 
-    // Scan 按钮的提交操作 ------------------------------------------
+    // Scan button submission operation ------------------------------------------
 	$('#sub-path').click(function(){
 		if( !scanCheck() ){
 			return false;
@@ -63,31 +63,10 @@ $(function(){
         return false;
     })
 
-    /*/ 隐藏导航栏的控制函数 ---------------------------------------------
-    $('.menu').mousedown(function(){
-        var menu = $('.menu');
-        if( menu.height() == 100 && menu.width() == $(window).width() ){
-            menu.css({'margin-top':'0px','margin-left':'0px'});
-        }
-        else{
-            menu.css({'margin-left':'0px','margin-top':'0px'});
-        }
-    })
-    $('.menu').mouseleave(function(){
-        var menu = $('.menu');
-        if( menu.height() == 100 && menu.width() == $(window).width() ){
-            menu.css({'margin-top':'-60px','margin-left':'0px'});
-        }
-        else{
-            menu.css({'margin-left':'-200px','margin-top':'0px'});
-        }
-    })
-    // ---------------------------------------------------------------------/**/
-
 }) // 外层函数结尾
 
 
-// 对输入的文件名进行检查 -----------------------------------------
+// Check the entered file name -----------------------------------------
 function scanCheck()
 {
 	if( !$('#file-path').val() ){
@@ -104,7 +83,7 @@ function scanCheck()
 }
 // -----------------------------------------------------------/**/
         
-// 发送code viewer的AJAX请求 ----------------------------------------
+// Send code viewer AJAX request ----------------------------------------
 function sendCodeViewReq( tag_a )
 {
     var grandparent = tag_a.parentNode.parentNode;
@@ -204,14 +183,14 @@ function sendCodeViewReq( tag_a )
 }
 // ----------------------------------------------------------/**/
 
-// 发送Scan的AJAX请求 ----------------------------------------
+// Send Scan's AJAX request ----------------------------------------
 function sendScanReq()
 {
     $.ajax({
         type : "POST",
         url : "index.php",
         dataType : "text",
-        data: {    // post的参数
+        data: {    // Post parameter
             path :  $("#file-path").val(),
             prj_path : $("#project-path").val(),
             type :　$("#vuln-trup").val(),
@@ -219,12 +198,13 @@ function sendScanReq()
         },
         success : function( data ){
             stopTimeCounter();
+			console.log(data);
             $('.timeused').html( 'Time Used : '+h+':'+m+':'+s+':'+ms );
             $('.waiting').css({'opacity':'0'});
             setTimeout(function(){
                 $('.waiting').css({'display':'none'});
             }, 600);
-            if( /工程不存在!/.test(data) ){ // 判断是否有数据返回
+            if( /Project does not exist!/.test(data) ){ // Determine if there is data return
                 $('#err_cont').append('<span>'+data+'</span>');
                 $('#err_cont').css({'display':'block'}).animate({'opacity':'1'},0.8);
                 return false;
@@ -243,29 +223,9 @@ function sendScanReq()
         }
     });
 }
-// ----------------------------------------------------------/**/
 
 
-/*/ 发送re搜索的AJAX请求 -----------------------------------------
-function sendSearchReq()
-{
-    $.ajax({
-        type : "POST",
-        url : "index.php",
-        dataType : "json",
-        data: {    // 使用post方法，需要设置data属性，指定传递的参数
-            path :  $("#file-path").val(),
-            regex : $("reg-ex").val()
-        },
-        success : function( data ){
-            // option    
-        },
-        error :  function( jqXHR ){
-            alert("发生错误：" + jqXHR.status);
-        }
-    });
-}
-// ------------------------------------------------------------/**/
+
 
 function addResultOnclidc()
 {
