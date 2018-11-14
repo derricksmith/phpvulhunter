@@ -68,7 +68,7 @@ class NodeUtils{
                 }
             	//Do not handle _GET _POST, etc. 
             	$userInput = Sources::getUserInput() ;
-            	if((property_exists($node->var, 'name') &&in_array($node->var->name, $userInput)){
+            	if(property_exists($node->var, 'name') && in_array($node->var->name, $userInput)){
             		return $node->var->name ;
             	}
             	
