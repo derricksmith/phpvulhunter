@@ -602,6 +602,11 @@ class CFGGenerator{
 		    if($node->getType() == 'Expr_ErrorSuppress'){
 		        $node = $node->expr ;
 		    }
+			
+			if($node instanceof Node\Stmt\Expression){
+				$node = $node->expr ;
+			}
+			
 			echo $node->getType()."<br />";
 			
 			switch ($node->getType()){
