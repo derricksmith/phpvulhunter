@@ -602,6 +602,8 @@ class CFGGenerator{
 		    if($node->getType() == 'Expr_ErrorSuppress'){
 		        $node = $node->expr ;
 		    }
+			echo $node->getType();
+			die();
 			switch ($node->getType()){
 				//Processing assignment statements			
 				case 'Expr_Assign':  
