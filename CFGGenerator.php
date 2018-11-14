@@ -367,10 +367,7 @@ class CFGGenerator{
 	*/
 	private function globalDefinesHandler($node,$block){
 		$globalDefine = new GlobalDefines() ;
-		if (property_exists($node,"vars")){
-			echo "<pre>";
-			print_r($node);
-            die();	
+		if (property_exists($node,"vars")){	
 			$names = $node->getSubNodeNames();
             foreach ($names as $name)
                 foreach ($node->$name as $parts)
