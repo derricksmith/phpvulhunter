@@ -16,6 +16,12 @@ class ValueSymbol {
 	 */
 	public function setValueByNode($node){
 		$type = $node->getType() ;
+		if (!property_exists($node,"value")){
+			echo "<pre>";
+			print_r($node);
+            die();
+		}
+		
 		$this->value = $node->value ;
 	}
 	
