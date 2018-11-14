@@ -597,7 +597,6 @@ class CFGGenerator{
 	public function simulate($block){
 		//Get all the nodes in the basic block
 		$nodes = $block->getContainedNodes() ;
-		array_push($this->nodes,$nodes);
 		//Loop the nodes collection, collect information into the blocksummary
 		foreach ($nodes as $node){
 		    if($node->getType() == 'Expr_ErrorSuppress'){
@@ -693,6 +692,8 @@ class CFGGenerator{
 		* @param $pNextBlock next basic block
 	*/
 	public function CFGBuilder($nodes,$condition,$pEntryBlock,$pNextBlock){
+		array_push($this->nodes,$nodes);
+		
 		//fileSummary of this file
 		global $JUMP_STATEMENT,$LOOP_STATEMENT,$STOP_STATEMENT,$RETURN_STATEMENT ;
 		$currBlock = new BasicBlock() ;
