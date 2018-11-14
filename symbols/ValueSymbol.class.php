@@ -1,11 +1,11 @@
 <?php
 
 /**
- * 针对静态的string和integer以及float来生成symbol
- * Notice：这里没有继承Symbol基类是因为静态string和数值没有相关的三元组信息
- * @author exploit
- *
- */
+  * Generate symbols for static strings and integers and floats
+  * Notice: The Symbol base class is not inherited because the static string and the value have no associated triplet information.
+  * @author exploit
+  *
+  */
 class ValueSymbol {
 	
 	private $value ; //Value对应的值
@@ -17,9 +17,10 @@ class ValueSymbol {
 	public function setValueByNode($node){
 		$type = $node->getType() ;
 		if (!property_exists($node,"value")){
-			echo "<pre>";
-			print_r($node);
-            die();
+			$names = $node->getSubNodeNames();
+            foreach ($names as $name){
+                $this->value = $node->$name;
+            }
 		}
 		
 		$this->value = $node->value ;
