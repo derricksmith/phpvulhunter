@@ -90,6 +90,9 @@ class CFGGenerator{
 				//catch branch
 				$catches = $node->catches ;
 				foreach ($catches as $catch){
+					echo "<pre>";
+					print_r($catch);
+					die();
 					$catch_branch = new Branch($catch->type, $catch->stmts) ;
 					array_push($branches, $catch_branch) ;
 				}
