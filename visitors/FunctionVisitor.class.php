@@ -199,4 +199,4 @@ class FunctionVisitor extends PhpParser\NodeVisitorAbstract{
 	}
 }
 
-?
+?>
