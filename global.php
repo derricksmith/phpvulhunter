@@ -6,6 +6,13 @@ require_once CURR_PATH . '/vendor/autoload.php' ;
 require_once CURR_PATH . '/BasicBlock.php';
 require_once CURR_PATH . '/FileSummaryGenerator.php';
 
+require_once CURR_PATH . '/visitors/IncludeVisitor.class.php';
+require_once CURR_PATH . '/visitors/LineVisitor.class.php';
+require_once CURR_PATH . '/visitors/NodeVisitor.class.php';
+require_once CURR_PATH . '/visitors/NodeFunctionVisitor.class.php';
+require_once CURR_PATH . '/visitors/FunctionVisitor.class.php';
+require_once CURR_PATH . '/visitors/BranchVisitor.class.php';
+
 require_once CURR_PATH . '/utils/AnalyseUtils.class.php';
 require_once CURR_PATH . '/utils/FileUtils.class.php';
 require_once CURR_PATH . '/utils/SymbolUtils.class.php';
