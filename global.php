@@ -48,8 +48,6 @@ require_once CURR_PATH . '/conf/securing.php';
 
 require_once CURR_PATH . '/analyser/TaintAnalyser.class.php';
 
-require_once CURR_PATH . '/new/RecursiveTraverser.class.php';
-
 require_once CURR_PATH . '/libs/Smarty_setup.php';
 
 require_once CURR_PATH . '/CFGGenerator.php';
