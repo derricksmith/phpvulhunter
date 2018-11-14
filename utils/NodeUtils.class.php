@@ -44,7 +44,7 @@ class NodeUtils{
             //param name
             case "Param":
 				
-				if (property_exists($node, 'var'){
+				if (property_exists($node, 'var')){
 					return NodeUtils::getNodeStringName($node->var);
 				}
 				return $node->name;
