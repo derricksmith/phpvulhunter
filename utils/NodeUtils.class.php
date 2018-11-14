@@ -44,7 +44,7 @@ class NodeUtils{
             //param name
             case "Param":
 				echo "<pre>";
-				print($node);
+				print_r($node);
 				die();
 					return $node->$name;
 				
