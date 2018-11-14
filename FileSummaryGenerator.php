@@ -53,7 +53,7 @@ class FileSummaryGenerator {
 	    if (!$absPath){
 	        return ;
 		}
-	    $visitor = new MyVisitor() ;
+	    $visitor = new NodeVisitor() ;
 	    $lexer = new PhpParser\Lexer(array(
 			'usedAttributes' => array(
 				'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
