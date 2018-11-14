@@ -859,9 +859,7 @@ class nodeFunctionVisitor extends PhpParser\NodeVisitorAbstract{
     
     public function leaveNode(Node $node){
         //处理过程间代码，即调用的方法定义中的源码
-        
-            $this->cfgGen->functionHandler($node, $this->block, $this->fileSummary);
-			return;
+        $this->cfgGen->functionHandler($node, $this->block, $this->fileSummary);
     }
 }
 
