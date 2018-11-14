@@ -714,7 +714,6 @@ class CFGGenerator{
 				    break;
 			}
 		}
-		die();
 	}
 	
 	
