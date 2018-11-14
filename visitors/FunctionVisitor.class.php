@@ -1,4 +1,5 @@
 <?php
+use PhpParser\Node;
 
 class FunctionVisitor extends PhpParser\NodeVisitorAbstract{
 	public $posArr ;   //参数列表

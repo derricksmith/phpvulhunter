@@ -1,5 +1,7 @@
 <?php
 
+use PhpParser\Node;
+
 class NodeFunctionVisitor extends PhpParser\NodeVisitorAbstract{
     public $block;
     public $fileSummary;

@@ -1,4 +1,5 @@
 <?php
+use PhpParser\Node;
 class BranchVisitor extends PhpParser\NodeVisitorAbstract{
 	public $branches = array() ;
 	/**

@@ -1,4 +1,6 @@
 <?php
+
+use PhpParser\Node;
 /** 
   * used to traverse the auxiliary class containing the node 
   * @author Exploit 

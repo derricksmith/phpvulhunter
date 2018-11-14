@@ -1,4 +1,6 @@
 <?php
+use PhpParser\Node;
+
 class Branch{
 	public $condition ;   //jump condition
 	public $nodes ;       //included nodes

@@ -1,4 +1,5 @@
 <?php
+use PhpParser\Node;
 /**
  * Get visitors to all AST nodes in the PHP File
  * @author Administrator
