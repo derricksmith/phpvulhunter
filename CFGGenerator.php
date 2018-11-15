@@ -515,7 +515,8 @@ class CFGGenerator{
 	        //Get the location of the dangerous parameters
 	        $argPosition = NodeUtils::getVulArgs($node) ;
 	        if(count($argPosition) == 0){
-	            return ;
+	            echo "argPosition == 0<br />"; 
+				return ;
 	        }
 	        //Get the variable to the location of the dangerous parameter
 	        $argArr = NodeUtils::getFuncParamsByPos($node, $argPosition);
@@ -526,10 +527,12 @@ class CFGGenerator{
 	                if(is_array($item)){
 	                    foreach ($item as $v){
 						   print_r($v);
+						   echo $v."<br />";
 	                       $analyser->analysis($block, $node, $v, $fileSummary) ;
 	                    }
 	                }else{
 						print_r($item);
+						echo $item."<br />";
 	                    $analyser->analysis($block, $node, $item, $fileSummary) ;
 	                }
 	    
