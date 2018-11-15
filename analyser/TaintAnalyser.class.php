@@ -184,11 +184,15 @@ class TaintAnalyser {
 	 * 
 	 */
 	public function currBlockTaintHandler($block,$node,$argName,$fileSummary, $flowNum=0){
-	    $tempNum = $flowNum;
+	    echo "executing currBlockTaintHandler <br />";
+		echo "Flows = ";
+		$tempNum = $flowNum;
 		//获取数据流信息
-		$flows = $block->getBlockSummary() ->getDataFlowMap() ;
+		$flows = $block->getBlockSummary()->getDataFlowMap() ;
 		$flows = array_reverse($flows); //逆序处理flows
 		//将处理过的flow移除
+		echo "Flows = ";
+		print_r($flows);
         while ($tempNum){
             $tempNum --;
             array_shift($flows);
@@ -243,13 +247,13 @@ class TaintAnalyser {
 	}
 	
 	
-/**
-	 * 处理多个block的情景
-	 * @param BasicBlock $block 当前基本块
-	 * @param string $argName 敏感参数名
-	 * @param Node $node 调用sink的node 
-	 * @param FileSummary $fileSummary 当前文件的文件摘要
-	 */
+	/**
+	* Scenario for handling multiple blocks
+	* @param BasicBlock $block current basic block
+	* @param string $argName Sensitive parameter name
+	* @param Node $node calls the node of the sink
+	* @param FileSummary $fileSummary File summary of the current file
+	*/
 	public function multiBlockHandler($block, $argName, $node, $fileSummary){
 		if($this->pathArr){
 			$this->pathArr = array() ;
@@ -258,10 +262,10 @@ class TaintAnalyser {
 		$this->getPrevBlocks($block) ;
 		$block_list = $this->pathArr ;
 
-		//单基本块进入   算法停止
+		//Single basic block entry algorithm stops
 		if(empty($block_list)){
 			echo "Block list is empty";
-		    // 首先，在当前基本块中探测变量，如果有source和不完整的santi则报告漏洞
+		    //First, probe the variable in the current basic block, report the vulnerability if there is source and incomplete santi
 		    $this->currBlockTaintHandler($block, $node, $argName, $fileSummary) ;
 		    return ;
 		}
@@ -269,13 +273,13 @@ class TaintAnalyser {
 		!empty($block) && array_push($block_list, $block) ;
 		
 		foreach($block_list as $bitem){
-		    //处理非平行结构的前驱基本块
+		    //Handle the basic block of the non-parallel structure
 		    if(!is_array($bitem)){
 		        $flows = $bitem->getBlockSummary()->getDataFlowMap() ;
 		        $flows = array_reverse($flows) ;
-		        //如果flow中没有信息，则换下一个基本块
+		        //If there is no information in the flow, then replace the basic block
 		        if($flows == null){
-		            //找到新的argName
+		            //Find the new argName
 		            foreach ($block->getBlockSummary()->getDataFlowMap() as $flow){
 		                if($flow->getName() == $argName){
 		                    if(is_object($flow->getLocation())){
