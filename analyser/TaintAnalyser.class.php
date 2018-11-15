@@ -643,6 +643,7 @@ class TaintAnalyser {
         $varName = substr($argName, 0, strpos($argName, '['));
 		echo "<pre>";
 		echo "argName = ".$argName."<br />";
+		echo "varName = ".$varName."<br />";
 		echo "block = <br/>";
 			print_r($block);
 		echo "node = <br/>";
