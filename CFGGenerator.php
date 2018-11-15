@@ -627,14 +627,10 @@ class CFGGenerator{
 		    }
 			
 			if($node instanceof Node\Stmt\Expression){
-				echo $node->getType()."<br />";
-				print_r($node);
 				$node = $node->expr ;
 			}
 			
 			switch ($node->getType()){
-				
-				
 				//Processing assignment statements	
 				case 'Expr_Assign':  
 					$dataFlow = new DataFlow() ;
