@@ -629,9 +629,9 @@ class CFGGenerator{
 		        $node = $node->expr ;
 		    }
 			
-			//if($node instanceof Node\Stmt\Expression){
-			//	$node = $node->expr ;
-			//}
+			if($node instanceof Node\Stmt\Expression){
+				$node = $node->expr ;
+			}
 			
 			switch ($node->getType()){
 				//Processing assignment statements	
