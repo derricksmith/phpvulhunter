@@ -152,7 +152,7 @@ class CFGGenerator{
 		* @param BasicBlock $block
 		* @param string $type handles the var and expr types of the assignment statement (left or right)
 	*/
-	private function assignHandler($node,$block,$dataFlow,$type){
+	private function expressionAssignHandler($node,$block,$dataFlow,$type){
 	    global $scan_type ;
 		echo "assignHandler node type = ". $node->getType(). "<br />"; 
 		print_r($node);
@@ -347,7 +347,7 @@ class CFGGenerator{
 		* @param string $type
 	*/
 	private function assignConcatHandler($node,$block,$dataFlow,$type){
-		$this->assignHandler($node, $block,$dataFlow,$type) ;	
+		$this->expressionAssignHandler($node, $block,$dataFlow,$type) ;	
 	}
 	
 	
@@ -629,16 +629,16 @@ class CFGGenerator{
 		        $node = $node->expr ;
 		    }
 			
-			if($node instanceof Node\Stmt\Expression){
-				$node = $node->expr ;
-			}
+			//if($node instanceof Node\Stmt\Expression){
+			//	$node = $node->expr ;
+			//}
 			
 			switch ($node->getType()){
 				//Processing assignment statements	
 				case 'Expr_Assign':  
 					$dataFlow = new DataFlow() ;
-					$this->assignHandler($node, $block,$dataFlow,"left") ;
-					$this->assignHandler($node, $block,$dataFlow,"right") ;
+					$this->expressionAssignHandler($node, $block,$dataFlow,"left") ;
+					$this->expressionAssignHandler($node, $block,$dataFlow,"right") ;
 					break ;
 				
 				//Processing foreach, converted to assignment in the summary
