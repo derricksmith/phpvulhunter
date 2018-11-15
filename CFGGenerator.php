@@ -186,6 +186,9 @@ class CFGGenerator{
 		    return ;
 		}
 		
+		if ($part->name == 'getid'){
+			echo "getid found";
+		}
 		
 		// Processing the assignment statement, stored in the DataFlow
 		// Handle the left side of the assignment statement
