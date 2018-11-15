@@ -527,6 +527,7 @@ class CFGGenerator{
 	                       $analyser->analysis($block, $node, $v, $fileSummary) ;
 	                    }
 	                }else{
+						print_r($item);
 	                    $analyser->analysis($block, $node, $item, $fileSummary) ;
 	                }
 	    
