@@ -520,6 +520,7 @@ class CFGGenerator{
 	        }
 	        //Get the variable to the location of the dangerous parameter
 	        $argArr = NodeUtils::getFuncParamsByPos($node, $argPosition);
+			print_r($argArr);
 	        //Traverse the dangerous parameter name, call the taint analysis function
 	        if(count($argArr) > 0){
 				echo "argArr > 0<br />";
