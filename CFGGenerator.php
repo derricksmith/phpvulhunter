@@ -201,16 +201,19 @@ class CFGGenerator{
 				$dataFlow->setValue($vs) ;
 			}
 		}elseif ($part && SymbolUtils::isVariable($part)){
-			if ($part->name == 'getid'){
-				echo "getid found";
-			}
 			//Add dataFlow
 			$vars = new VariableSymbol() ;
 			$vars->setValue($part);
 			if($type == "left"){
+				if ($part->name == 'getid'){
+					print_r($vars);
+				}
 				$dataFlow->setLocation($vars) ;
 				$dataFlow->setName($part->name) ;
 			}else if($type == "right"){
+				if ($part->name == 'getid'){
+					print_r($part);
+				}
 				$dataFlow->setValue($part) ;
 			}
 			
