@@ -582,10 +582,12 @@ class CFGGenerator{
 	        		if(is_array($item)){
 	        			foreach ($item as $v){
 							print_r($v);
+							echo $v;
 	        				$analyser->analysis($block, $node, $v, $this->fileSummary) ;
 	        			}
 	        		}else{
 						print_r($item);
+						echo $item;
 	        			$analyser->analysis($block, $node, $item, $this->fileSummary) ;
 	        		}
 	        	  
