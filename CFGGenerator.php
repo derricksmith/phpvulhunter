@@ -154,8 +154,8 @@ class CFGGenerator{
 	*/
 	private function expressionAssignHandler($node,$block,$dataFlow,$type){
 	    global $scan_type ;
-		echo "assignHandler node type = ". $node->getType(). "<br />"; 
-		print_r($node);
+		//echo "assignHandler node type = ". $node->getType(). "<br />"; 
+		//print_r($node);
 		if($node->getType() == 'Expr_ErrorSuppress'){
 		    $node = $node->expr ;
 		}
@@ -207,13 +207,13 @@ class CFGGenerator{
 			$vars->setValue($part);
 			if($type == "left"){
 				if ($part->name == 'getid'){
-					print_r($vars);
+					//print_r($vars);
 				}
 				$dataFlow->setLocation($vars) ;
 				$dataFlow->setName($part->name) ;
 			}else if($type == "right"){
 				if ($part->name == 'getid'){
-					print_r($part);
+					//print_r($part);
 				}
 				$dataFlow->setValue($part) ;
 			}
@@ -631,6 +631,7 @@ class CFGGenerator{
 			
 			if($node instanceof Node\Stmt\Expression){
 				echo $node->getType()."<br />";
+				print_r($node);
 				$node = $node->expr ;
 			}
 			
