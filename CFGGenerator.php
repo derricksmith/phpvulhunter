@@ -186,9 +186,7 @@ class CFGGenerator{
 		    return ;
 		}
 		
-		if ($part->name == 'getid'){
-			echo "getid found";
-		}
+		
 		
 		// Processing the assignment statement, stored in the DataFlow
 		// Handle the left side of the assignment statement
@@ -196,6 +194,9 @@ class CFGGenerator{
 			//Add Location and name in DataFlow
 			$vs = new ValueSymbol() ;
 			$vs->setValueByNode($part) ;
+			if ($part->name == 'getid'){
+				echo "getid found";
+			}
 			if($type == "left"){
 				$dataFlow->setLocation($vs) ;
 				$dataFlow->setName($part->name) ;
