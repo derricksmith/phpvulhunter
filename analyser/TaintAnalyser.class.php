@@ -642,8 +642,10 @@ class TaintAnalyser {
 	    //传入变量本身就是source
         $varName = substr($argName, 0, strpos($argName, '['));
 		echo "argName = ".$argName."<br />";
-		echo "block = <br/>".$block."<br />";
-		echo "node = <br/>".$node."<br />";
+		echo "block = <br/>";
+			print_r($block);
+		echo "node = <br/>";
+			print_r($node);
         if(in_array($varName, $this->sourcesArr) || in_array($argName, $this->sourcesArr)){
 	        //报告漏洞
 	        $path = $fileSummary->getPath() ;
