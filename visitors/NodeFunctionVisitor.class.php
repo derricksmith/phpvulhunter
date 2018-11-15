@@ -15,8 +15,10 @@ class NodeFunctionVisitor extends PhpParser\NodeVisitorAbstract{
             $node->getType() == "Expr_Isset")){
             $this->cfgGen->functionHandler($node, $this->block, $this->fileSummary);
 		} else {
+			echo "<pre>";
 			echo $node->getType()."<br />";
 			print_r($node);
+			echo "</pre>";
 		}
 	}
 }
