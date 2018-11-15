@@ -507,8 +507,9 @@ class CFGGenerator{
 	    $funcName = NodeUtils::getNodeFunctionName($node);
 	    //Determine whether it is a sink function, the return format is array (true, funcname) or array (false)
 	    $ret = NodeUtils::isSinkFunction($funcName, $scan_type);
-		echo $funcName."<pre>";
+		echo "<pre>"$funcName."<br />";
 	    if($ret[0] != null && $ret[0] === true){
+			echo "ret[0] === true<br />";
 	        //If you find a sink call, start taint analysis
 	        $analyser = new TaintAnalyser() ;
 	        //Get the location of the dangerous parameters
@@ -520,6 +521,7 @@ class CFGGenerator{
 	        $argArr = NodeUtils::getFuncParamsByPos($node, $argPosition);
 	        //Traverse the dangerous parameter name, call the taint analysis function
 	        if(count($argArr) > 0){
+				echo "argArr > 0<br />";
 	            foreach ($argArr as $item){
 	                if(is_array($item)){
 	                    foreach ($item as $v){
