@@ -641,7 +641,7 @@ class TaintAnalyser {
     public function analysis($block, $node, $argName, $fileSummary){
 	    //传入变量本身就是source
         $varName = substr($argName, 0, strpos($argName, '['));
-		echo "<pre>"
+		echo "<pre>";
 		echo "argName = ".$argName."<br />";
 		echo "block = <br/>";
 			print_r($block);
