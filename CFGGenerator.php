@@ -630,6 +630,7 @@ class CFGGenerator{
 		    }
 			
 			if($node instanceof Node\Stmt\Expression){
+				echo $node->getType()."<br />";
 				$node = $node->expr ;
 			}
 			
