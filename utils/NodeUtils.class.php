@@ -19,9 +19,9 @@ class NodeUtils{
 
         switch ($type) {    
             case "Expr_Variable":
-				return NodeUtils::getNodeStringName($node->name);
+				//return NodeUtils::getNodeStringName($node->name);
             case "Scalar_String":
-				return NodeUtils::getNodeStringName($node->value);
+				//return NodeUtils::getNodeStringName($node->value);
             case "Scalar_LNumber":
             case "Scalar_DNumber":
                 if($node->name){
@@ -93,7 +93,6 @@ class NodeUtils{
             //Array dim 
             case "Expr_ConstFetch":
                 $names = $node->getSubNodeNames();
-                //print_r($names);
                 foreach ($names as $name)
                     return NodeUtils::getNodeStringName($node->$name);
                 break;
