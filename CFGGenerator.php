@@ -194,9 +194,6 @@ class CFGGenerator{
 			//Add Location and name in DataFlow
 			$vs = new ValueSymbol() ;
 			$vs->setValueByNode($part) ;
-			if ($part->name == 'getid'){
-				echo "getid found";
-			}
 			if($type == "left"){
 				$dataFlow->setLocation($vs) ;
 				$dataFlow->setName($part->name) ;
@@ -204,6 +201,9 @@ class CFGGenerator{
 				$dataFlow->setValue($vs) ;
 			}
 		}elseif ($part && SymbolUtils::isVariable($part)){
+			if ($part->name == 'getid'){
+				echo "getid found";
+			}
 			//Add dataFlow
 			$vars = new VariableSymbol() ;
 			$vars->setValue($part);
