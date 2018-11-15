@@ -155,6 +155,7 @@ class CFGGenerator{
 	private function assignHandler($node,$block,$dataFlow,$type){
 	    global $scan_type ;
 		echo "assignHandler node type = ". $node->getType(). "<br />"; 
+		print_r($node);
 		if($node->getType() == 'Expr_ErrorSuppress'){
 		    $node = $node->expr ;
 		}
