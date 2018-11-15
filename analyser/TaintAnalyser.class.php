@@ -641,6 +641,7 @@ class TaintAnalyser {
     public function analysis($block, $node, $argName, $fileSummary){
 	    //传入变量本身就是source
         $varName = substr($argName, 0, strpos($argName, '['));
+		echo "argName = ".$argName."<br />";
         if(in_array($varName, $this->sourcesArr) || in_array($argName, $this->sourcesArr)){
 	        //报告漏洞
 	        $path = $fileSummary->getPath() ;
