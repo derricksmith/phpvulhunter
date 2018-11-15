@@ -258,6 +258,7 @@ class TaintAnalyser {
 
 		//单基本块进入   算法停止
 		if(empty($block_list)){
+			echo "Block list is empty";
 		    // 首先，在当前基本块中探测变量，如果有source和不完整的santi则报告漏洞
 		    $this->currBlockTaintHandler($block, $node, $argName, $fileSummary) ;
 		    return ;
