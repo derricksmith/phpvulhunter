@@ -204,13 +204,13 @@ class CFGGenerator{
 			$vars->setValue($part);
 			if($type == "left"){
 				if ($part->name == 'getid'){
-					//print_r($vars);
+					print_r($vars);
 				}
 				$dataFlow->setLocation($vars) ;
 				$dataFlow->setName($part->name) ;
 			}else if($type == "right"){
 				if ($part->name == 'getid'){
-					//print_r($part);
+					print_r($part);
 				}
 				$dataFlow->setValue($part) ;
 			}
@@ -525,7 +525,6 @@ class CFGGenerator{
 	        }
 	        //Get the variable to the location of the dangerous parameter
 	        $argArr = NodeUtils::getFuncParamsByPos($node, $argPosition);
-			print_r($argArr);
 	        //Traverse the dangerous parameter name, call the taint analysis function
 	        if(count($argArr) > 0){
 				echo "argArr > 0<br />";
