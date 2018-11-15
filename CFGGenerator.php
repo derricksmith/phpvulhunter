@@ -13,8 +13,6 @@ class CFGGenerator{
 	//Global filesummary object
 	private $fileSummary ;
 	
-	public $nodes;
-	
 	//constructor
 	public function __construct(){
 		$lexer = new PhpParser\Lexer(array(
@@ -25,7 +23,6 @@ class CFGGenerator{
 		$this->parser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $lexer);
 		$this->traverser = new PhpParser\NodeTraverser ;
 		$this->fileSummary = new FileSummary() ;
-		$this->nodes = array();
 	}	
 	
 	//fileSummary get method
@@ -636,6 +633,8 @@ class CFGGenerator{
 			}
 			
 			switch ($node->getType()){
+				
+				
 				//Processing assignment statements	
 				case 'Expr_Assign':  
 					$dataFlow = new DataFlow() ;
@@ -724,7 +723,6 @@ class CFGGenerator{
 		* @param $pNextBlock next basic block
 	*/
 	public function CFGBuilder($nodes,$condition,$pEntryBlock,$pNextBlock){
-		array_push($this->nodes,$nodes);
 		
 		//fileSummary of this file
 		global $JUMP_STATEMENT,$LOOP_STATEMENT,$STOP_STATEMENT,$RETURN_STATEMENT ;
