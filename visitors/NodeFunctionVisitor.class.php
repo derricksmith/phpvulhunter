@@ -14,6 +14,8 @@ class NodeFunctionVisitor extends PhpParser\NodeVisitorAbstract{
             $node->getType() == 'Expr_StaticCall' ||
             $node->getType() == "Expr_Isset")){
             $this->cfgGen->functionHandler($node, $this->block, $this->fileSummary);
+		} else {
+			echo $node->getType()."<br />";
 		}
 	}
 }
