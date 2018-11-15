@@ -581,9 +581,11 @@ class CFGGenerator{
 	        	foreach ($argArr as $item){
 	        		if(is_array($item)){
 	        			foreach ($item as $v){
+							print_r($v);
 	        				$analyser->analysis($block, $node, $v, $this->fileSummary) ;
 	        			}
 	        		}else{
+						print_r($item);
 	        			$analyser->analysis($block, $node, $item, $this->fileSummary) ;
 	        		}
 	        	  
