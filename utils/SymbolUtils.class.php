@@ -124,7 +124,6 @@ class SymbolUtils {
 		        }
 		    }
 		    $symbol->setSymbols($arr) ;
-			print_r($symbol);
 		    return $symbol ;
 		}else{
 			return null ;
