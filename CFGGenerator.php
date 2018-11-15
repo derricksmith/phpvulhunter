@@ -520,6 +520,7 @@ class CFGGenerator{
 	        //Traverse the dangerous parameter name, call the taint analysis function
 	        if(count($argArr) > 0){
 				echo "argArr > 0<br />";
+				print_R($argArr);
 	            foreach ($argArr as $item){
 	                if(is_array($item)){
 	                    foreach ($item as $v){
