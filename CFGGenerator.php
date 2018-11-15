@@ -507,7 +507,7 @@ class CFGGenerator{
 	    $funcName = NodeUtils::getNodeFunctionName($node);
 	    //Determine whether it is a sink function, the return format is array (true, funcname) or array (false)
 	    $ret = NodeUtils::isSinkFunction($funcName, $scan_type);
-
+		echo $funcName."<pre>";
 	    if($ret[0] != null && $ret[0] === true){
 	        //If you find a sink call, start taint analysis
 	        $analyser = new TaintAnalyser() ;
@@ -523,11 +523,11 @@ class CFGGenerator{
 	            foreach ($argArr as $item){
 	                if(is_array($item)){
 	                    foreach ($item as $v){
-						   print_r($v);
+						   //print_r($v);
 	                       $analyser->analysis($block, $node, $v, $fileSummary) ;
 	                    }
 	                }else{
-						print_r($item);
+						//print_r($item);
 	                    $analyser->analysis($block, $node, $item, $fileSummary) ;
 	                }
 	    
