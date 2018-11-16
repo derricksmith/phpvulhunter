@@ -140,7 +140,7 @@ class TaintAnalyser {
 	 */
 	public function getPrevBlocks($block){
 		if($block != null){
-			echo "Does not equal null <br />";
+			echo "After getPrevBlocks <br />";
 			echo "block = <br />".
 			print_r($block);
 			$blocks = array() ;
@@ -264,6 +264,8 @@ class TaintAnalyser {
 			$this->pathArr = array() ;
 		}
 		$currBlock = $block;
+		echo "Before getPrevBlocks <br />";
+		print_r($currBlock);
 		$this->getPrevBlocks($currBlock) ;              //////// This function is losing the $block object
 		$block_list = $this->pathArr ;
 
