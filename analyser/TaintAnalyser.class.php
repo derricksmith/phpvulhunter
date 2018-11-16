@@ -284,7 +284,7 @@ class TaintAnalyser {
 					echo "Flows = null<br />";
 		            //Find the new argName
 		            foreach ($block->getBlockSummary()->getDataFlowMap() as $flow){
-						echo "Flowname =".$flow->getName."<br />";
+						echo "Flowname =".$flow->getName()."<br />";
 						echo "Argname =".$argName."<br />";
 		                if($flow->getName() == $argName){
 							echo "Flowname = Argname<br />";
@@ -292,6 +292,7 @@ class TaintAnalyser {
 								echo "Flow Location = Object<br />";
 		                        $target = $flow->getLocation() ;
 		                        $type = TypeUtils::getTypeByFuncName(NodeUtils::getNodeFunctionName($node)) ;
+								echo "Type =".$type."<br />";
 		                        $encodingArr = $target->getEncoding() ;
 		                        $saniArr =  $target->getSanitization() ;
 		                    
