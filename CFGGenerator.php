@@ -151,6 +151,7 @@ class CFGGenerator{
 	*/
 	private function expressionAssignHandler($node,$block,$dataFlow,$type){
 	    echo "Calling Function.... CFGGenerator::expressionAssignHandler Type = ".$type."<br />";
+		print_r($node);
 		global $scan_type ;
 		if($node->getType() == 'Expr_ErrorSuppress'){
 			$node = $node->expr;
