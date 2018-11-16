@@ -256,9 +256,9 @@ class TaintAnalyser {
 	*/
 	public function multiBlockHandler($block, $argName, $node, $fileSummary){
 		print_r($block);
-		//if($this->pathArr){
-		//	$this->pathArr = array() ;
-		//}
+		if($this->pathArr){
+			$this->pathArr = array() ;
+		}
 		//$this->getPrevBlocks($block) ;
 		$block_list = $this->pathArr ;
 
