@@ -286,11 +286,14 @@ class CFGGenerator{
 		
 		//Processed an assignment statement, join the DataFlowMap
 		if($type == "right"){
-			echo "right";
+			echo "right<br />";
+
 			$block->getBlockSummary()->addDataFlowItem($dataFlow);
 		} else {
-			echo "not right";
+			echo "not right<br />";
 		}
+		echo "Data Flow<br />";
+		print_r($dataFlow);
 	}
 	
 	
