@@ -258,12 +258,9 @@ class TaintAnalyser {
 		if($this->pathArr){
 			$this->pathArr = array() ;
 		}
-		echo "Before getPrevBlocks <br />";
-		print_r($block);
+		
 		$this->getPrevBlocks($block);              //////// This function is losing the $block object
-		echo "After getPrevBlocks <br />";
-		echo "block = <br />".
-		print_r($block);
+		
 		$block_list = $this->pathArr ;
 
 		//Single basic block entry algorithm stops
