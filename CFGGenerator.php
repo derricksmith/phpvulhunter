@@ -281,14 +281,6 @@ class CFGGenerator{
 		        }
 
 		    }
-			//Processing type scaler encapsed
-			
-			//if($part && ($part->getType() == "Scalar_Encapsed")
-		    //    && $type == "right"){
-		    //    $dataFlow->getLocation()->setType("int") ;
-		    //    $symbol = SymbolUtils::getSymbolByNode($part->expr) ;
-		    //    $dataFlow->setValue($symbol) ;
-		    //}
 			
 		    //Processing type cast
 		    if($part && ($part->getType() == "Expr_Cast_Int" || $part->getType() == "Expr_Cast_Double")
@@ -306,6 +298,8 @@ class CFGGenerator{
 		    if($part && $part->getType() == "Scalar_Encapsed"){
 		        $symbol = SymbolUtils::getSymbolByNode($part) ;
 		        $dataFlow->setValue($symbol) ;
+				echo "Type is Scalar_Encapsed <br />";
+				echo "Symbol = ".$symbol;
 		    }
 			
 			
