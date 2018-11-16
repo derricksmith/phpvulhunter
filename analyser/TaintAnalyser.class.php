@@ -263,9 +263,8 @@ class TaintAnalyser {
 		if($this->pathArr){
 			$this->pathArr = array() ;
 		}
-		$this->getPrevBlocks($block) ;
-		echo "Path Array = <br />";
-		//print_R($this->pathArr);
+		$currBlock = $block;
+		$this->getPrevBlocks($currBlock) ;
 		$block_list = $this->pathArr ;
 
 		//Single basic block entry algorithm stops
