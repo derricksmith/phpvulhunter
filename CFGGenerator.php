@@ -205,7 +205,6 @@ class CFGGenerator{
 				$dataFlow->setValue($vs) ;
 			}
 		}elseif ($part && SymbolUtils::isVariable($part)){
-			if if($part->getType() == 'Expr_ErrorSuppress')
 			//Add dataFlow
 			$vars = new VariableSymbol() ;
 			$vars->setValue($part);
