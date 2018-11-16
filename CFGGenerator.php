@@ -153,6 +153,7 @@ class CFGGenerator{
 	    echo "Calling Function.... CFGGenerator::expressionAssignHandler<br />";
 		global $scan_type ;
 		if($node->getType() == 'Expr_ErrorSuppress'){
+			print_r($node);
 			$this->expressionAssignHandler($node->expr,$block,$dataFlow,$type) ;
 		}
 		
@@ -260,7 +261,7 @@ class CFGGenerator{
 		        if($type == 'right' && !SymbolUtils::isValue($part)){
 					
 		            $funcName = NodeUtils::getNodeFunctionName($part) ;
-					echo "Function Name = ".$funcName;
+					echo "Function Name = ".$funcName."<br />";
 		            BIFuncUtils::assignFuncHandler($part, $type, $dataFlow, $funcName) ;
 		            if($dataFlow->getValue() != null){
 		                //If the function assignment is processed, it will return immediately
