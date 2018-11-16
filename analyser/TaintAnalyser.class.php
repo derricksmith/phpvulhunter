@@ -645,54 +645,41 @@ class TaintAnalyser {
 	
 	
 	/**
-	 * 污点分析的函数
-	 * @param BasicBlock $block 当前基本块
-	 * @param Node $node 当前的函数调用node
-	 * @param string $argName 危险参数名
-	 * @param FileSummary 当前文件摘要
-	 */
+	* Function of stain analysis
+	* @param BasicBlock $block current basic block
+	* @param Node $node current function call node
+	* @param string $argName dangerous parameter name
+	* @param FileSummary Current File Summary
+	*/
     public function analysis($block, $node, $argName, $fileSummary){
-	    //传入变量本身就是source
+	    //The incoming variable itself is the source
         $varName = substr($argName, 0, strpos($argName, '['));
-		echo "<pre>";
-		echo "argName = ".$argName."<br />";
-		echo "varName = ".$varName."<br />";
-		//echo "block = <br/>";
-			//print_r($block);
-		//echo "node = <br/>";
-			//print_r($node);
         if(in_array($varName, $this->sourcesArr) || in_array($argName, $this->sourcesArr)){
-	        //报告漏洞
+	        //Report vulnerability
 	        $path = $fileSummary->getPath() ;
 	        $type = TypeUtils::getTypeByFuncName(NodeUtils::getNodeFunctionName($node)) ;
 	        $this->report($path, $path, $node, $argName ,$type) ;
 	    }else{
-	        $path = $fileSummary->getPath() ;
-	        //获取前驱基本块集合并将当前基本量添加至列表
-	        $this->getPrevBlocks($block) ;
-	        $block_list = $this->pathArr ;
-	        array_push($block_list, $block) ;
-	        //多个基本块的处理
-	        $this->pathArr = array() ;
+	        //$path = $fileSummary->getPath() ;
+	        //Get the precursor basic block set and add the current base amount to the list
+	        //$this->getPrevBlocks($block) ;
+	        //$block_list = $this->pathArr ;
+	        //array_push($block_list, $block) ;
+	        //Processing of multiple basic blocks
+	        //$this->pathArr = array() ;
 	        $this->multiBlockHandler($block, $argName, $node, $fileSummary) ;
 	        $this->multiFileHandler($block, $argName, $node, $fileSummary);
 	    }
     }
 	
 	/**
-	 * 报告漏洞的函数
-	 * @param string $path 出现漏洞的文件路径
-	 * @param Node $node 出现漏洞的node
-	 * @param Node $var  出现漏洞的变量node
-	 * @param string 漏洞的类型
-	 */
+	* Function to report vulnerabilities
+	* @param string $path Vulnerable file path
+	* @param Node $node Vulnerable node
+	* @param Node $var Vulnerability variable node
+	* @param string Type of vulnerability
+	*/
 	public function report($node_path, $var_path, $node, $var, $type){
-// 		echo "<pre>" ;
-// 		echo "有漏洞=====>". $type ."<br/>" ;
-// 		echo "漏洞变量：<br/>" ;
-// 		print_r($var) ;
-// 		echo "漏洞节点：<br/>" ;
-// 		print_r($node) ;
 		
 		//获取结果集上下文
 		$resultContext = ResultContext::getInstance() ;
