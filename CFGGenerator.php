@@ -306,9 +306,10 @@ class CFGGenerator{
 		//Processed an assignment statement, join the DataFlowMap
 		if($type == "right"){
 			//echo "<b>Right</b><br />";
-			echo "Type is Scalar_Encapsed <br />";
+			
 			echo "Symbol = ";
 			print_r($symbol);
+			print_r($dataFlow);
 			$block->getBlockSummary()->addDataFlowItem($dataFlow);
 		} else {
 			//echo "<b>Left</b><br />";
