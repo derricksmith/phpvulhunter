@@ -150,7 +150,8 @@ class CFGGenerator{
 		* @param string $type handles the var and expr types of the assignment statement (left or right)
 	*/
 	private function expressionAssignHandler($node,$block,$dataFlow,$type){
-	    global $scan_type ;
+	    echo "Calling Function.... CFGGenerator::expressionAssignHandler<br />";
+		global $scan_type ;
 		if($node->getType() == 'Expr_ErrorSuppress'){
 		    $node = $node->expr ;
 		}
@@ -508,7 +509,8 @@ class CFGGenerator{
 		* @param fileSummary $fileSummary current file summary
 	*/
 	public function functionHandler($node, $block, $fileSummary){  
-	    //Find the sink function of the phase type according to the scan type specified by the user
+	    echo "Calling Function.... CFGGenerator::functionHandler<br />";
+		//Find the sink function of the phase type according to the scan type specified by the user
 	    global $scan_type;
 	    //Get the name of the function called to determine whether it is a sink call
 	    $funcName = NodeUtils::getNodeFunctionName($node);
