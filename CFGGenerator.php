@@ -151,7 +151,7 @@ class CFGGenerator{
 	*/
 	private function expressionAssignHandler($node,$block,$dataFlow,$type){
 	    echo "Calling Function.... CFGGenerator::expressionAssignHandler Type = ".$type."<br />";
-		print_r($node);
+		//print_r($node);
 		global $scan_type ;
 		if($node->getType() == 'Expr_ErrorSuppress'){
 			$node = $node->expr;
@@ -298,9 +298,6 @@ class CFGGenerator{
 		    if($part && $part->getType() == "Scalar_Encapsed"){
 		        $symbol = SymbolUtils::getSymbolByNode($part) ;
 		        $dataFlow->setValue($symbol) ;
-				echo "Type is Scalar_Encapsed <br />";
-				echo "Symbol = ";
-				print_r($symbol);
 		    }
 			
 			
@@ -309,7 +306,9 @@ class CFGGenerator{
 		//Processed an assignment statement, join the DataFlowMap
 		if($type == "right"){
 			//echo "<b>Right</b><br />";
-
+			echo "Type is Scalar_Encapsed <br />";
+			echo "Symbol = ";
+			print_r($symbol);
 			$block->getBlockSummary()->addDataFlowItem($dataFlow);
 		} else {
 			//echo "<b>Left</b><br />";
