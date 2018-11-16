@@ -151,13 +151,7 @@ class CFGGenerator{
 	*/
 	private function expressionAssignHandler($node,$block,$dataFlow,$type){
 	    global $scan_type ;
-		echo "<pre>";
-		echo "Part Type = ".$node->getType()."<br />";
 		if($node->getType() == 'Expr_ErrorSuppress'){
-		    $node = $node->expr ;
-		}
-		
-		if($node->getType() == 'Stmt_Expression'){
 		    $node = $node->expr ;
 		}
 		
@@ -628,7 +622,7 @@ class CFGGenerator{
 		    }
 			
 			if($node instanceof Node\Stmt\Expression){
-				//$node = $node->expr ;
+				$node = $node->expr ;
 			}
 			
 			switch ($node->getType()){
