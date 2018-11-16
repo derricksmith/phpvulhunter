@@ -511,6 +511,7 @@ class CFGGenerator{
 	    global $scan_type;
 	    //Get the name of the function called to determine whether it is a sink call
 	    $funcName = NodeUtils::getNodeFunctionName($node);
+		echo "Function Name = ".$funcName."<br />";
 	    //Determine whether it is a sink function, the return format is array (true, funcname) or array (false)
 	    $ret = NodeUtils::isSinkFunction($funcName, $scan_type);
 		//echo "<pre>".$funcName."<br />";
