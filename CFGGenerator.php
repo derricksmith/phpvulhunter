@@ -613,6 +613,7 @@ class CFGGenerator{
 		* @param BasicBlock $block
 	*/
 	public function simulate($block){
+		echo "<pre>";
 		//Get all the nodes in the basic block
 		$nodes = $block->getContainedNodes() ;
 		//Loop the nodes collection, collect information into the blocksummary
