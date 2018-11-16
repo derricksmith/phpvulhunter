@@ -257,7 +257,7 @@ class TaintAnalyser {
 		if($this->pathArr){
 			$this->pathArr = array() ;
 		}
-		
+		print_r($block);
 		$this->getPrevBlocks($block) ;
 		$block_list = $this->pathArr ;
 
