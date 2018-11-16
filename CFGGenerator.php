@@ -180,7 +180,6 @@ class CFGGenerator{
 		    if($type == "left"){
 		        $dataFlow->setLocation($arr) ;
 		        $dataFlow->setName(NodeUtils::getNodeGLOBALSNodeName($part)) ;
-				echo "Part Name (Global) = ".NodeUtils::getNodeGLOBALSNodeName($part)."<br />";
 		        //Add registerglobal
 		        $this->registerGLOBALSHandler($part, $block);
 		    }else if($type == "right"){
@@ -200,7 +199,6 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($vs) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name (Value) = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($vs) ;
 			}
@@ -208,14 +206,11 @@ class CFGGenerator{
 			//Add dataFlow
 			$vars = new VariableSymbol() ;
 			$vars->setValue($part);
-			echo "Part is Variable, Variable = ".$part->name."<br />";
 			if($type == "left"){
 				$dataFlow->setLocation($vars) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name (Variable) Left = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($part) ;
-				echo "Part Name (Variable) Right = ".$part->name."<br />";
 			}
 			
 		}elseif ($part && SymbolUtils::isConstant($part)){
@@ -226,7 +221,6 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($con) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name (Constant) = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($con) ;
 			}
@@ -238,7 +232,6 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($arr) ;
 				$dataFlow->setName(NodeUtils::getNodeStringName($part)) ;
-				echo "Part Name (ArrayDimFetch) = ".NodeUtils::getNodeStringName($part)."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($arr) ;
 			}
@@ -248,7 +241,6 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($concat) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name (Concat) = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($concat) ;
 			}
@@ -262,7 +254,7 @@ class CFGGenerator{
 
 		        //Process id = urlencode($_GET['id']) ;
 		        if($type == 'right' && !SymbolUtils::isValue($part)){
-					
+					echo "type = right <br />";
 		            $funcName = NodeUtils::getNodeFunctionName($part) ;
 					echo "Function Name = ".$funcName."<br />";
 		            BIFuncUtils::assignFuncHandler($part, $type, $dataFlow, $funcName) ;
@@ -272,13 +264,16 @@ class CFGGenerator{
 		                return  ;
 		            }else{
 						//Check if it is a sink function
+						print($block);
 		                $this->functionHandler($part, $block, $this->fileSummary);
 		                 
 		                //Processing purification information and coding information
 		                SanitizationHandler::setSanitiInfo($part,$dataFlow, $block, $this->fileSummary) ;
 		                EncodingHandler::setEncodeInfo($part, $dataFlow, $block, $this->fileSummary) ;
 		            }
-		        }
+		        } else {
+					echo "type != right or Symbol != value <br />";
+				}
 
 		    }
 			
