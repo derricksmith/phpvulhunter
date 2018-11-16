@@ -18,7 +18,7 @@ class SymbolUtils {
 	    if ($node instanceof Node){
 	        $type = $node->getType() ;
 	    }
-		if(in_array($type, array("Scalar_EncapsedStringPart","Scalar_String","Scalar_LNumber","Scalar_DNumber","Name","Expr_ConstFetch"))){
+		if(in_array($type, array("Scalar_Encapsed","Scalar_String","Scalar_LNumber","Scalar_DNumber","Name","Expr_ConstFetch"))){
 			return true ;
 		}else{
 			return false ;
