@@ -207,6 +207,7 @@ class CFGGenerator{
 			//Add dataFlow
 			$vars = new VariableSymbol() ;
 			$vars->setValue($part);
+			echo "Part is Variable, Variable = ".$part->name."<br />";
 			if($type == "left"){
 				$dataFlow->setLocation($vars) ;
 				$dataFlow->setName($part->name) ;
@@ -252,7 +253,7 @@ class CFGGenerator{
 		}else{
 		    //does not belong to any existing symbol type, such as function calls, type conversion
 		    echo "Does not belong to any existing symbol type<br />";
-			echo "Part type = ".$partY."<br />";
+			echo "Part type = ".$part->getType()."<br />";
 			if($part && ($part->getType() == "Expr_FuncCall" ||
 		        $part->getType() == "Expr_MethodCall" ||
 		        $part->getType() == "Expr_StaticCall" ) ){
