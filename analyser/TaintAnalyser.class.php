@@ -138,13 +138,13 @@ class TaintAnalyser {
 	 * @return Array 返回前驱基本块集合$this->pathArr
 	 * 使用该方法时，需要对类属性$this->pathArr进行初始化
 	 */
-	public function getPrevBlocks($currBlock){
-		if($currBlock != null){
+	public function getPrevBlocks($block){
+		if($block != null){
 			echo "Does not equal null <br />";
-			echo "CurrBlock = <br />".
-			print_r($currBlock);
+			echo "block = <br />".
+			print_r($block);
 			$blocks = array() ;
-			$edges = $currBlock->getInEdges();
+			$edges = $block->getInEdges();
 			//如果到达了第一个基本块则返回
 			if(!$edges) return $this->pathArr;
 			
