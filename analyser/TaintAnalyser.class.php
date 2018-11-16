@@ -170,7 +170,7 @@ class TaintAnalyser {
 				}
 				
 			}
-			return 
+
 		}
 	}
 	
