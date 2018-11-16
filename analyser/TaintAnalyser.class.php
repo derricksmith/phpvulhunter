@@ -315,14 +315,7 @@ class TaintAnalyser {
 		                    }
 		                    return ;
 		                }else{
-		                    //在最初block中，argName没有变化则直接递归
-		                    if($block_list == null){
-		                        return ;
-		                    }else{
-		                        $this->multiBlockHandler($bitem, $argName, $node, $fileSummary) ;
-                                return ;
-		                    }
-		    
+		                    $this->multiBlockHandler($bitem, $argName, $node, $fileSummary) ;
 		                }
 		            }
 		        }else{
