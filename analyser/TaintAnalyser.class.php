@@ -185,9 +185,6 @@ class TaintAnalyser {
 	 */
 	public function currBlockTaintHandler($block,$node,$argName,$fileSummary, $flowNum=0){
 	    echo "executing currBlockTaintHandler <br />";
-		echo "Block = ";
-		print_r($block);
-		
 		$tempNum = $flowNum;
 		//获取数据流信息
 		$flows = $block->getBlockSummary()->getDataFlowMap() ;
