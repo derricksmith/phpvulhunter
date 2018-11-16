@@ -156,6 +156,10 @@ class CFGGenerator{
 		    $node = $node->expr ;
 		}
 		
+		if($node->getType() == 'Stmt_Expression'){
+		    $node = $node->expr ;
+		}
+		
 		$part = null ;
 		
 		if($type == "left"){
