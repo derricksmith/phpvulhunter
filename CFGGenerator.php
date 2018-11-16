@@ -296,7 +296,7 @@ class CFGGenerator{
 			echo "<b>Left</b><br />";
 		}
 		echo "Data Flow<br />";
-		print_r($dataFlow);
+		//print_r($dataFlow);
 	}
 	
 	

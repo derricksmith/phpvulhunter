@@ -271,7 +271,7 @@ class TaintAnalyser {
 		}
 		
 		!empty($block) && array_push($block_list, $block) ;
-		
+		print_r($block_list_);
 		foreach($block_list as $bitem){
 		    //Handle the basic block of the non-parallel structure
 		    if(!is_array($bitem)){
@@ -651,10 +651,10 @@ class TaintAnalyser {
 		echo "<pre>";
 		echo "argName = ".$argName."<br />";
 		echo "varName = ".$varName."<br />";
-		echo "block = <br/>";
-			print_r($block);
-		echo "node = <br/>";
-			print_r($node);
+		//echo "block = <br/>";
+			//print_r($block);
+		//echo "node = <br/>";
+			//print_r($node);
         if(in_array($varName, $this->sourcesArr) || in_array($argName, $this->sourcesArr)){
 	        //报告漏洞
 	        $path = $fileSummary->getPath() ;
