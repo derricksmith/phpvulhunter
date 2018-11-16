@@ -150,10 +150,9 @@ class CFGGenerator{
 		* @param string $type handles the var and expr types of the assignment statement (left or right)
 	*/
 	private function expressionAssignHandler($node,$block,$dataFlow,$type){
-	    echo "Calling Function.... CFGGenerator::expressionAssignHandler<br />";
+	    echo "Calling Function.... CFGGenerator::expressionAssignHandler Type = ".$type."<br />";
 		global $scan_type ;
 		if($node->getType() == 'Expr_ErrorSuppress'){
-			print_r($node);
 			$this->expressionAssignHandler($node->expr,$block,$dataFlow,$type) ;
 		}
 		
