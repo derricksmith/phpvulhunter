@@ -234,7 +234,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($arr) ;
 				$dataFlow->setName(NodeUtils::getNodeStringName($part)) ;
-				echo "Part Name = ".NodeUtils::NodeUtils::getNodeStringName($part);
+				echo "Part Name = ".NodeUtils::getNodeStringName($part);
 			}else if($type == "right"){
 				$dataFlow->setValue($arr) ;
 			}
