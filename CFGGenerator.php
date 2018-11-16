@@ -153,7 +153,7 @@ class CFGGenerator{
 	    echo "Calling Function.... CFGGenerator::expressionAssignHandler<br />";
 		global $scan_type ;
 		if($node->getType() == 'Expr_ErrorSuppress'){
-		    $node = $node->expr ;
+			$this->expressionAssignHandler($node->expr,$block,$dataFlow,$type) ;
 		}
 		
 		$part = null ;
@@ -178,7 +178,7 @@ class CFGGenerator{
 		    if($type == "left"){
 		        $dataFlow->setLocation($arr) ;
 		        $dataFlow->setName(NodeUtils::getNodeGLOBALSNodeName($part)) ;
-				echo "Part Name = ".NodeUtils::getNodeGLOBALSNodeName($part)."<br />";
+				echo "Part Name (Global) = ".NodeUtils::getNodeGLOBALSNodeName($part)."<br />";
 		        //Add registerglobal
 		        $this->registerGLOBALSHandler($part, $block);
 		    }else if($type == "right"){
@@ -198,7 +198,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($vs) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name = ".$part->name."<br />";
+				echo "Part Name (Value) = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($vs) ;
 			}
@@ -209,7 +209,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($vars) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name = ".$part->name."<br />";
+				echo "Part Name (Variable) = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($part) ;
 			}
@@ -222,7 +222,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($con) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name = ".$part->name."<br />";
+				echo "Part Name (Constant) = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($con) ;
 			}
@@ -234,7 +234,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($arr) ;
 				$dataFlow->setName(NodeUtils::getNodeStringName($part)) ;
-				echo "Part Name = ".NodeUtils::getNodeStringName($part)."<br />";
+				echo "Part Name (ArrayDimFetch) = ".NodeUtils::getNodeStringName($part)."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($arr) ;
 			}
@@ -244,21 +244,23 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($concat) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name = ".$part->name."<br />";
+				echo "Part Name (Concat) = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($concat) ;
 			}
 		}else{
 		    //does not belong to any existing symbol type, such as function calls, type conversion
 		    echo "Does not belong to any existing symbol type<br />";
-			echo "Part type = ".$part->getType()."<br />";
+			echo "Part type = ".$partY."<br />";
 			if($part && ($part->getType() == "Expr_FuncCall" ||
 		        $part->getType() == "Expr_MethodCall" ||
 		        $part->getType() == "Expr_StaticCall" ) ){
 
 		        //Process id = urlencode($_GET['id']) ;
 		        if($type == 'right' && !SymbolUtils::isValue($part)){
+					
 		            $funcName = NodeUtils::getNodeFunctionName($part) ;
+					echo "Function Name = ".$funcName;
 		            BIFuncUtils::assignFuncHandler($part, $type, $dataFlow, $funcName) ;
 		            if($dataFlow->getValue() != null){
 		                //If the function assignment is processed, it will return immediately
