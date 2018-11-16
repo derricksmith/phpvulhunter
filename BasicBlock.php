@@ -3,21 +3,21 @@
 require_once CURR_PATH . '/CFGEdge.php';
 require CURR_PATH . '/summary/BlockSummary.class.php';
 /**
- * 定义基本块信息
+ * Define basic block information
  * @author exploit
  *
  */
 class BasicBlock{
-	//基本块中包含的AST node，放入list中
+	//AST node contained in the basic block, put in the list
 	private $containedNodes ;
 	private $blockSummary;
 	
 	public $is_entry = false ;
 	public $is_exit = false ;
 	public  $loop_var = NULL;
-	//CFG节点的进入边
+	//The entry edge of the CFG node
 	private $inEdges = array() ;
-	//CFG节点的出边
+	//The edge of the CFG node
 	private $outEdges = array() ;
 	
 	
@@ -28,9 +28,9 @@ class BasicBlock{
 	
 	
 	/**
-	 * 给定一个node，将其加入到containedNodes中
-	 * @param unknown $node
-	 */
+	* Given a node, add it to the containedNodes
+	* @param unknown $node
+	*/
 	public function addNode($node){
 		if($node){
 			array_push($this->containedNodes, $node) ;
@@ -40,8 +40,8 @@ class BasicBlock{
 	}
 	
 	/**
-	 * 获取基本块中所有的AST节点
-	 */
+	* Get all AST nodes in the basic block
+	*/
 	public function getContainedNodes(){
 		return $this->containedNodes ;
 	}
@@ -55,9 +55,9 @@ class BasicBlock{
 	}
 	
 	/**
-	 * 为CFG中的节点添加入入边
-	 * @param unknown $inEdge
-	 */
+	* Add an entry edge to a node in the CFG
+	* @param unknown $inEdge
+	*/
 	public function addInEdge($inEdge){
 		if($inEdge){
 			array_push($this->inEdges, $inEdge) ;
@@ -67,9 +67,9 @@ class BasicBlock{
 	}
 	
 	/**
-	 * 为CFG中的节点加入出边
-	 * @param unknown $outEdge
-	 */
+	* Adding edges for nodes in CFG
+	* @param unknown $outEdge
+	*/
 	public  function addOutEdge($outEdge){
 		if($outEdge){
 			array_push($this->outEdges, $outEdge) ;
