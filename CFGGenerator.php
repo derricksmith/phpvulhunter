@@ -243,7 +243,8 @@ class CFGGenerator{
 			}
 		}else{
 		    //does not belong to any existing symbol type, such as function calls, type conversion
-		    if($part && ($part->getType() == "Expr_FuncCall" ||
+		    echo "Part type = ".$part->getType()."<br />";
+			if($part && ($part->getType() == "Expr_FuncCall" ||
 		        $part->getType() == "Expr_MethodCall" ||
 		        $part->getType() == "Expr_StaticCall" ) ){
 
@@ -289,13 +290,13 @@ class CFGGenerator{
 		
 		//Processed an assignment statement, join the DataFlowMap
 		if($type == "right"){
-			echo "<b>Right</b><br />";
+			//echo "<b>Right</b><br />";
 
 			$block->getBlockSummary()->addDataFlowItem($dataFlow);
 		} else {
-			echo "<b>Left</b><br />";
+			//echo "<b>Left</b><br />";
 		}
-		echo "Data Flow<br />";
+		//echo "Data Flow<br />";
 		//print_r($dataFlow);
 	}
 	
