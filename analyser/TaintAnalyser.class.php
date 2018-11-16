@@ -140,9 +140,6 @@ class TaintAnalyser {
 	 */
 	public function getPrevBlocks($block){
 		if($block != null){
-			echo "After getPrevBlocks <br />";
-			echo "block = <br />".
-			print_r($block);
 			$blocks = array() ;
 			$edges = $block->getInEdges();
 			//如果到达了第一个基本块则返回
@@ -174,8 +171,6 @@ class TaintAnalyser {
 				
 			}
 
-		} else {
-			echo "Equals null <br />";
 		}
 	}
 	
@@ -263,10 +258,12 @@ class TaintAnalyser {
 		if($this->pathArr){
 			$this->pathArr = array() ;
 		}
-		$currBlock = $block;
 		echo "Before getPrevBlocks <br />";
-		print_r($currBlock);
-		$this->getPrevBlocks($currBlock) ;              //////// This function is losing the $block object
+		print_r($block);
+		$this->getPrevBlocks($block);              //////// This function is losing the $block object
+		echo "After getPrevBlocks <br />";
+		echo "block = <br />".
+		print_r($block);
 		$block_list = $this->pathArr ;
 
 		//Single basic block entry algorithm stops
