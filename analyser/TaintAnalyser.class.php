@@ -185,7 +185,7 @@ class TaintAnalyser {
 	 */
 	public function currBlockTaintHandler($block,$node,$argName,$fileSummary, $flowNum=0){
 	    echo "executing currBlockTaintHandler <br />";
-		print_r($block);
+		//print_r($block);
 		$tempNum = $flowNum;
 		//获取数据流信息
 		$flows = $block->getBlockSummary()->getDataFlowMap() ;
@@ -264,6 +264,7 @@ class TaintAnalyser {
 		//Single basic block entry algorithm stops
 		if(empty($block_list)){
 			echo "Block list is empty <br />";
+			print_r($block);
 		    //First, probe the variable in the current basic block, report the vulnerability if there is source and incomplete santi
 		    $this->currBlockTaintHandler($block, $node, $argName, $fileSummary) ;
 		    return ;
