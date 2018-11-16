@@ -211,9 +211,10 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($vars) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name (Variable) = ".$part->name."<br />";
+				echo "Part Name (Variable) Left = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($part) ;
+				echo "Part Name (Variable) Right = ".$part->name."<br />";
 			}
 			
 		}elseif ($part && SymbolUtils::isConstant($part)){
