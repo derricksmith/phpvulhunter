@@ -285,6 +285,7 @@ class TaintAnalyser {
 		            //Find the new argName
 		            foreach ($block->getBlockSummary()->getDataFlowMap() as $flow){
 						echo "Flowname =".$flow->getName."<br />";
+						print_r($flow);
 						echo "Argname =".$argName."<br />";
 		                if($flow->getName() == $argName){
 		                    if(is_object($flow->getLocation())){
