@@ -51,7 +51,7 @@ class BIFuncUtils {
 					$new_name = NodeUtils::getNodeFunctionName($value) ;
 					self::assignFuncHandler($value, $type, $dataFlow, $new_name) ;
 				}
-				print_R($dataflow);
+				print_R($dataFlow);
 				if($dataFlow->getValue() != null){
 					return ;
 				}
