@@ -271,9 +271,7 @@ class CFGGenerator{
 		                SanitizationHandler::setSanitiInfo($part,$dataFlow, $block, $this->fileSummary) ;
 		                EncodingHandler::setEncodeInfo($part, $dataFlow, $block, $this->fileSummary) ;
 		            }
-		        } else {
-					echo "type != right or Symbol != value <br />";
-				}
+		        }
 
 		    }
 			
@@ -296,21 +294,14 @@ class CFGGenerator{
 		    }
 			
 			
-		}//else
+		}
 		
 		//Processed an assignment statement, join the DataFlowMap
 		if($type == "right"){
-			//echo "<b>Right</b><br />";
 			
-			echo "Symbol = ";
-			print_r($symbol);
-			print_r($dataFlow);
+			
 			$block->getBlockSummary()->addDataFlowItem($dataFlow);
-		} else {
-			//echo "<b>Left</b><br />";
-		}
-		//echo "Data Flow<br />";
-		//print_r($dataFlow);
+		} 
 	}
 	
 	
