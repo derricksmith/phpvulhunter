@@ -620,7 +620,7 @@ class CFGGenerator{
 		    }
 			
 			if($node instanceof Node\Stmt\Expression){
-				$node = $node->expr ;
+				//$node = $node->expr ;
 			}
 			
 			switch ($node->getType()){
