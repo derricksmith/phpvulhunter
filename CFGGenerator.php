@@ -299,7 +299,8 @@ class CFGGenerator{
 		        $symbol = SymbolUtils::getSymbolByNode($part) ;
 		        $dataFlow->setValue($symbol) ;
 				echo "Type is Scalar_Encapsed <br />";
-				echo "Symbol = ".$symbol;
+				echo "Symbol = ";
+				print_r($symbol);
 		    }
 			
 			
