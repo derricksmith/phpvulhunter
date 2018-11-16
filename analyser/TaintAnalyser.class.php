@@ -256,10 +256,10 @@ class TaintAnalyser {
 	*/
 	public function multiBlockHandler($block, $argName, $node, $fileSummary){
 		print_r($block);
-		if($this->pathArr){
-			$this->pathArr = array() ;
-		}
-		$this->getPrevBlocks($block) ;
+		//if($this->pathArr){
+		//	$this->pathArr = array() ;
+		//}
+		//$this->getPrevBlocks($block) ;
 		$block_list = $this->pathArr ;
 
 		//Single basic block entry algorithm stops
