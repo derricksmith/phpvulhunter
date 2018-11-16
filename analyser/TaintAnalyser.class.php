@@ -140,6 +140,7 @@ class TaintAnalyser {
 	 */
 	public function getPrevBlocks($currBlock){
 		if($currBlock != null){
+			echo "Does not equal null <br />";
 			$blocks = array() ;
 			$edges = $currBlock->getInEdges();
 			//如果到达了第一个基本块则返回
@@ -171,6 +172,8 @@ class TaintAnalyser {
 				
 			}
 
+		} else {
+			echo "Equals null <br />";
 		}
 	}
 	
