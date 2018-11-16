@@ -264,7 +264,7 @@ class CFGGenerator{
 		                return  ;
 		            }else{
 						//Check if it is a sink function
-						print($block);
+						print_r($block);
 		                $this->functionHandler($part, $block, $this->fileSummary);
 		                 
 		                //Processing purification information and coding information
