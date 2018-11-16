@@ -151,7 +151,8 @@ class CFGGenerator{
 	*/
 	private function expressionAssignHandler($node,$block,$dataFlow,$type){
 	    global $scan_type ;
-		
+		echo "<pre>";
+		echo "Part Type = ".$node->getType()."<br />";
 		if($node->getType() == 'Expr_ErrorSuppress'){
 		    $node = $node->expr ;
 		}
@@ -170,8 +171,7 @@ class CFGGenerator{
 			return ;
 		}
 		
-		echo "<pre>";
-		echo "Part Type = ".$part->getType()."<br />";
+		
 		
 		// Handling the assignment of $GLOBALS
 		//$GLOBAL['name'] = "chongrui" ; The stream information is $name = "chongrui" ;
