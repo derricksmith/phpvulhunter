@@ -255,6 +255,7 @@ class TaintAnalyser {
 	* @param FileSummary $fileSummary File summary of the current file
 	*/
 	public function multiBlockHandler($block, $argName, $node, $fileSummary){
+		print_r($block);
 		if($this->pathArr){
 			$this->pathArr = array() ;
 		}
@@ -264,14 +265,13 @@ class TaintAnalyser {
 		//Single basic block entry algorithm stops
 		if(empty($block_list)){
 			echo "Block list is empty <br />";
-			print_r($block);
+			//print_r($block);
 		    //First, probe the variable in the current basic block, report the vulnerability if there is source and incomplete santi
 		    $this->currBlockTaintHandler($block, $node, $argName, $fileSummary) ;
 		    return ;
 		}
 		
 		!empty($block) && array_push($block_list, $block) ;
-		print_r($block_list_);
 		foreach($block_list as $bitem){
 		    //Handle the basic block of the non-parallel structure
 		    if(!is_array($bitem)){
