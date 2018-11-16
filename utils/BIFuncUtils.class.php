@@ -33,6 +33,7 @@ class BIFuncUtils {
 	 * @param unknown $dataFlow
 	 */
 	public static function assignFuncHandler($part, $type, $dataFlow, $funcName){
+			echo "Calling Function.... BIFuncUtils::assignFuncHandler<br />";
 			$single_func = self::getSingleFuncs() ;
 			$encoding_convert = array('iconv') ;
 			if($type == "right" && array_key_exists($funcName, $single_func)){
@@ -50,7 +51,7 @@ class BIFuncUtils {
 					$new_name = NodeUtils::getNodeFunctionName($value) ;
 					self::assignFuncHandler($value, $type, $dataFlow, $new_name) ;
 				}
-				
+				print_R($dataflow);
 				if($dataFlow->getValue() != null){
 					return ;
 				}
