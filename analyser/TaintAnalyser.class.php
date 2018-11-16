@@ -276,10 +276,12 @@ class TaintAnalyser {
 			echo "Foreach block <br />";
 		    //Handle the basic block of the non-parallel structure
 		    if(!is_array($bitem)){
+				echo "bitem is array<br />";
 		        $flows = $bitem->getBlockSummary()->getDataFlowMap() ;
 		        $flows = array_reverse($flows) ;
 		        //If there is no information in the flow, then replace the basic block
 		        if($flows == null){
+					echo "Flows = null<br />";
 		            //Find the new argName
 		            foreach ($block->getBlockSummary()->getDataFlowMap() as $flow){
 		                if($flow->getName() == $argName){
@@ -322,6 +324,7 @@ class TaintAnalyser {
 		                }
 		            }
 		        }else{
+					echo "flows != null<br />";
 		            //对于每个flow,寻找变量argName
 		            foreach ($flows as $flow){
 		                if($flow->getName() == $argName){
@@ -655,13 +658,13 @@ class TaintAnalyser {
 	        $type = TypeUtils::getTypeByFuncName(NodeUtils::getNodeFunctionName($node)) ;
 	        $this->report($path, $path, $node, $argName ,$type) ;
 	    }else{
-	        $path = $fileSummary->getPath() ;
+	        //$path = $fileSummary->getPath() ;
 	        //Get the precursor basic block set and add the current base amount to the list
-	        $this->getPrevBlocks($block) ;
-	        $block_list = $this->pathArr ;
-	        array_push($block_list, $block) ;
+	        //$this->getPrevBlocks($block) ;
+	        //$block_list = $this->pathArr ;
+	        //array_push($block_list, $block) ;
 	        //Processing of multiple basic blocks
-	        $this->pathArr = array() ;
+	        //$this->pathArr = array() ;
 	        $this->multiBlockHandler($block, $argName, $node, $fileSummary) ;
 	        $this->multiFileHandler($block, $argName, $node, $fileSummary);
 	    }
