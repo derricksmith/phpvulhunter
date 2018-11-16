@@ -655,13 +655,13 @@ class TaintAnalyser {
 	        $type = TypeUtils::getTypeByFuncName(NodeUtils::getNodeFunctionName($node)) ;
 	        $this->report($path, $path, $node, $argName ,$type) ;
 	    }else{
-	        //$path = $fileSummary->getPath() ;
+	        $path = $fileSummary->getPath() ;
 	        //Get the precursor basic block set and add the current base amount to the list
-	        //$this->getPrevBlocks($block) ;
-	        //$block_list = $this->pathArr ;
-	        //array_push($block_list, $block) ;
+	        $this->getPrevBlocks($block) ;
+	        $block_list = $this->pathArr ;
+	        array_push($block_list, $block) ;
 	        //Processing of multiple basic blocks
-	        //$this->pathArr = array() ;
+	        $this->pathArr = array() ;
 	        $this->multiBlockHandler($block, $argName, $node, $fileSummary) ;
 	        $this->multiFileHandler($block, $argName, $node, $fileSummary);
 	    }
