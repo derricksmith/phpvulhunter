@@ -276,6 +276,7 @@ class TaintAnalyser {
 		
 		!empty($block) && array_push($block_list, $block) ;
 		foreach($block_list as $bitem){
+			echo "Foreach block <br />";
 		    //Handle the basic block of the non-parallel structure
 		    if(!is_array($bitem)){
 		        $flows = $bitem->getBlockSummary()->getDataFlowMap() ;
