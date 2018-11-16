@@ -205,6 +205,7 @@ class CFGGenerator{
 				$dataFlow->setValue($vs) ;
 			}
 		}elseif ($part && SymbolUtils::isVariable($part)){
+			if if($part->getType() == 'Expr_ErrorSuppress')
 			//Add dataFlow
 			$vars = new VariableSymbol() ;
 			$vars->setValue($part);
@@ -281,6 +282,15 @@ class CFGGenerator{
 		        }
 
 		    }
+			//Processing type scaler encapsed
+			
+			//if($part && ($part->getType() == "Scalar_Encapsed")
+		    //    && $type == "right"){
+		    //    $dataFlow->getLocation()->setType("int") ;
+		    //    $symbol = SymbolUtils::getSymbolByNode($part->expr) ;
+		    //    $dataFlow->setValue($symbol) ;
+		    //}
+			
 		    //Processing type cast
 		    if($part && ($part->getType() == "Expr_Cast_Int" || $part->getType() == "Expr_Cast_Double")
 		        && $type == "right"){
