@@ -153,7 +153,8 @@ class CFGGenerator{
 	    echo "Calling Function.... CFGGenerator::expressionAssignHandler Type = ".$type."<br />";
 		global $scan_type ;
 		if($node->getType() == 'Expr_ErrorSuppress'){
-			$this->expressionAssignHandler($node->expr,$block,$dataFlow,$type) ;
+			$node = $node->expr;
+			//$this->expressionAssignHandler($node->expr,$block,$dataFlow,$type) ;
 		}
 		
 		$part = null ;
