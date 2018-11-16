@@ -151,6 +151,10 @@ class CFGGenerator{
 	*/
 	private function expressionAssignHandler($node,$block,$dataFlow,$type){
 	    global $scan_type ;
+		
+		echo "<pre>";
+		echo "Part Type = ".$part->getType()."<br />";
+		
 		if($node->getType() == 'Expr_ErrorSuppress'){
 		    $node = $node->expr ;
 		}
@@ -283,8 +287,7 @@ class CFGGenerator{
 			
 			
 		}//else
-		echo "<pre>";
-		echo "Part Type = ".$part->getType()."<br />";
+		
 		//Processed an assignment statement, join the DataFlowMap
 		if($type == "right"){
 			echo "right<br />";
