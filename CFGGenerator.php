@@ -283,7 +283,8 @@ class CFGGenerator{
 			
 			
 		}//else
-		
+		echo "<pre">;
+		echo "Part Type = ".$part->getType()."<br />";
 		//Processed an assignment statement, join the DataFlowMap
 		if($type == "right"){
 			echo "right<br />";
