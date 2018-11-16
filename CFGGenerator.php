@@ -178,6 +178,7 @@ class CFGGenerator{
 		    if($type == "left"){
 		        $dataFlow->setLocation($arr) ;
 		        $dataFlow->setName(NodeUtils::getNodeGLOBALSNodeName($part)) ;
+				echo "Part Name = ".NodeUtils::getNodeGLOBALSNodeName($part);
 		        //Add registerglobal
 		        $this->registerGLOBALSHandler($part, $block);
 		    }else if($type == "right"){
@@ -197,6 +198,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($vs) ;
 				$dataFlow->setName($part->name) ;
+				echo "Part Name = ".$part->name;
 			}else if($type == "right"){
 				$dataFlow->setValue($vs) ;
 			}
@@ -207,6 +209,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($vars) ;
 				$dataFlow->setName($part->name) ;
+				echo "Part Name = ".$part->name;
 			}else if($type == "right"){
 				$dataFlow->setValue($part) ;
 			}
@@ -219,6 +222,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($con) ;
 				$dataFlow->setName($part->name) ;
+				echo "Part Name = ".$part->name;
 			}else if($type == "right"){
 				$dataFlow->setValue($con) ;
 			}
@@ -230,6 +234,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($arr) ;
 				$dataFlow->setName(NodeUtils::getNodeStringName($part)) ;
+				echo "Part Name = ".NodeUtils::NodeUtils::getNodeStringName($part);
 			}else if($type == "right"){
 				$dataFlow->setValue($arr) ;
 			}
@@ -239,12 +244,14 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($concat) ;
 				$dataFlow->setName($part->name) ;
+				echo "Part Name = ".$part->name;
 			}else if($type == "right"){
 				$dataFlow->setValue($concat) ;
 			}
 		}else{
 		    //does not belong to any existing symbol type, such as function calls, type conversion
-		    echo "Part type = ".$part->getType()."<br />";
+		    echo "Does not belong to any existing symbol type<br />";
+			echo "Part type = ".$part->getType()."<br />";
 			if($part && ($part->getType() == "Expr_FuncCall" ||
 		        $part->getType() == "Expr_MethodCall" ||
 		        $part->getType() == "Expr_StaticCall" ) ){
