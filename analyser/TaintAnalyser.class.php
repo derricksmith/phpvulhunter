@@ -264,7 +264,7 @@ class TaintAnalyser {
 			$this->pathArr = array() ;
 		}
 		$currBlock = $block;
-		$this->getPrevBlocks($currBlock) ;
+		$this->getPrevBlocks($currBlock) ;              //////// This function is losing the $block object
 		$block_list = $this->pathArr ;
 
 		//Single basic block entry algorithm stops
