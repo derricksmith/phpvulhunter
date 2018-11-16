@@ -141,6 +141,8 @@ class TaintAnalyser {
 	public function getPrevBlocks($currBlock){
 		if($currBlock != null){
 			echo "Does not equal null <br />";
+			echo "CurrBlock = <br />".
+			print_r($currBlock);
 			$blocks = array() ;
 			$edges = $currBlock->getInEdges();
 			//如果到达了第一个基本块则返回
@@ -263,7 +265,7 @@ class TaintAnalyser {
 		}
 		$this->getPrevBlocks($block) ;
 		echo "Path Array = <br />";
-		print_R($this->pathArr);
+		//print_R($this->pathArr);
 		$block_list = $this->pathArr ;
 
 		//Single basic block entry algorithm stops
