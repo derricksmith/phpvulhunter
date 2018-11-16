@@ -191,10 +191,10 @@ class TaintAnalyser {
 		$tempNum = $flowNum;
 		//获取数据流信息
 		$flows = $block->getBlockSummary()->getDataFlowMap() ;
-		$flows = array_reverse($flows); //逆序处理flows
-		//将处理过的flow移除
 		echo "Flows = ";
 		print_r($flows);
+		$flows = array_reverse($flows); //逆序处理flows
+		//将处理过的flow移除
         while ($tempNum){
             $tempNum --;
             array_shift($flows);
