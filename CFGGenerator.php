@@ -178,7 +178,7 @@ class CFGGenerator{
 		    if($type == "left"){
 		        $dataFlow->setLocation($arr) ;
 		        $dataFlow->setName(NodeUtils::getNodeGLOBALSNodeName($part)) ;
-				echo "Part Name = ".NodeUtils::getNodeGLOBALSNodeName($part);
+				echo "Part Name = ".NodeUtils::getNodeGLOBALSNodeName($part)."<br />";
 		        //Add registerglobal
 		        $this->registerGLOBALSHandler($part, $block);
 		    }else if($type == "right"){
@@ -198,7 +198,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($vs) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name = ".$part->name;
+				echo "Part Name = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($vs) ;
 			}
@@ -209,7 +209,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($vars) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name = ".$part->name;
+				echo "Part Name = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($part) ;
 			}
@@ -222,7 +222,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($con) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name = ".$part->name;
+				echo "Part Name = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($con) ;
 			}
@@ -234,7 +234,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($arr) ;
 				$dataFlow->setName(NodeUtils::getNodeStringName($part)) ;
-				echo "Part Name = ".NodeUtils::getNodeStringName($part);
+				echo "Part Name = ".NodeUtils::getNodeStringName($part)."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($arr) ;
 			}
@@ -244,7 +244,7 @@ class CFGGenerator{
 			if($type == "left"){
 				$dataFlow->setLocation($concat) ;
 				$dataFlow->setName($part->name) ;
-				echo "Part Name = ".$part->name;
+				echo "Part Name = ".$part->name."<br />";
 			}else if($type == "right"){
 				$dataFlow->setValue($concat) ;
 			}
