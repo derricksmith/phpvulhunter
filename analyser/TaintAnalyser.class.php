@@ -259,7 +259,7 @@ class TaintAnalyser {
 			$this->pathArr = array() ;
 		}
 		
-		//$this->getPrevBlocks($block);              //////// This function is losing the $block object
+		$this->getPrevBlocks($block);              //////// This function is losing the $block object
 		
 		$block_list = $this->pathArr ;
 
