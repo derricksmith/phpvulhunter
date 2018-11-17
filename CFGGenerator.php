@@ -745,8 +745,6 @@ class CFGGenerator{
         if (!is_array($nodes)){
             $nodes = array($nodes);
         }
-		
-		case 'Expr_Include':
         
 		//Iterate each AST node
 		foreach($nodes as $node){
