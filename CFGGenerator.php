@@ -562,6 +562,8 @@ class CFGGenerator{
             	$this->fileSummary->getPath(),
             	$this->fileSummary->getIncludeMap()
 	        );
+			
+			print_R($funcBody);
 
 			//check
 	        if(!$funcBody || !is_object($funcBody)) return ;
