@@ -750,7 +750,7 @@ class CFGGenerator{
 		foreach($nodes as $node){
 			//Collect the require include_once include_once PHP file name in the node
 			$this->fileSummary->addIncludeToMap(NodeUtils::getNodeIncludeInfo($node)) ;
-			
+			print_R($this->fileSummary);
 			if(!is_object($node)) continue ;
 			
 			//Do not analyze function definitions
