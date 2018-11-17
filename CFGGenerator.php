@@ -525,7 +525,7 @@ class CFGGenerator{
 	    $ret = NodeUtils::isSinkFunction($funcName, $scan_type);
 		//echo "<pre>".$funcName."<br />";
 	    if($ret[0] != null && $ret[0] === true){
-			//echo "ret[0] === true<br />";
+			echo "ret[0] === true<br />";
 	        //If you find a sink call, start taint analysis
 	        $analyser = new TaintAnalyser() ;
 	        //Get the location of the dangerous parameters
