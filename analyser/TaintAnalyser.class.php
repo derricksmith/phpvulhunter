@@ -299,13 +299,12 @@ class TaintAnalyser {
 		                        $res = $this->isSanitization($type, $target, $saniArr, $encodingArr) ;
 								echo "res = ".$res."<br />";
 		                        if($res == true){
-									echo "res = True<br />";
 		                            return "safe" ;
 		                        }
 		                    }
 		                    
 		                    $vars = $this->getVarsByFlow($flow) ;
-		                    
+		                    print_R($vars);
 		                    foreach ($vars as $var){
 		                        $varName = $this->getVarName($var) ; 
 		                        //如果$varName 为source
