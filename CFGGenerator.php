@@ -706,23 +706,24 @@ class CFGGenerator{
 					$this->functionHandler($node, $block, $this->fileSummary);
 					break ;
 				case 'Expr_Include':
-					$includeVisitor = new NodeVisitor() ;
-					$includeLexer = new PhpParser\Lexer(array(
-							'usedAttributes' => array(
-							'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
-						)
-					));
-					$includeParser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $includeLexer);
-					$includeTraverser = new PhpParser\NodeTraverser ;
-					$includeCode = file_get_contents($node->value);
-					$includeStmts = $includeParser->parse($includeCode) ;
-					$includeTraverser->addVisitor($includeVisitor) ;
-					$includeTraverser->traverse($inlcudeStmts) ;
-					$includeNodes = $includeVisitor->getNodes() ;
+					print_r($node);
+					//$includeVisitor = new NodeVisitor() ;
+					//$includeLexer = new PhpParser\Lexer(array(
+					//		'usedAttributes' => array(
+					//		'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+					//	)
+					//));
+					//$includeParser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $includeLexer);
+					//$includeTraverser = new PhpParser\NodeTraverser ;
+					//$includeCode = file_get_contents($node->value);
+					//$includeStmts = $includeParser->parse($includeCode) ;
+					//$includeTraverser->addVisitor($includeVisitor) ;
+					//$includeTraverser->traverse($inlcudeStmts) ;
+					//$includeNodes = $includeVisitor->getNodes() ;
 					
-					$includepEntryBlock = new BasicBlock() ;
-					$includepEntryBlock->is_entry = true ;
-					$this->CFGBuilder($includeNodes,$condition,$includepEntryBlock,$includepNextBlock);
+					//$includepEntryBlock = new BasicBlock() ;
+					//$includepEntryBlock->is_entry = true ;
+					//$this->CFGBuilder($includeNodes,$condition,$includepEntryBlock,$includepNextBlock);
 					break ;	
 				default:
 				    $traverser = new PhpParser\NodeTraverser;
