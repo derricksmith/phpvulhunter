@@ -749,7 +749,23 @@ class CFGGenerator{
 		//Iterate each AST node
 		foreach($nodes as $node){
 			if ($node->getType() == 'Expr_Include'){
-				$this->CFGBuilder($nodes,$condition,$pEntryBlock,$pNextBlock);
+				$includeVisitor = new NodeVisitor() ;
+				$includeLexer = new PhpParser\Lexer(array(
+						'usedAttributes' => array(
+						'comments', 'startLine', 'endLine', 'startTokenPos', 'endTokenPos'
+					)
+				));
+				$includeParser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $includeLexer);
+				$includeTraverser = new PhpParser\NodeTraverser ;
+				$includeCode = file_get_contents($node->expr->value);
+				$includeStmts = $includeParser->parse(includeCode) ;
+				$includeTraverser->addVisitor($includeVisitor) ;
+				$includeTraverser->traverse($inlcudeStmts) ;
+				$includeNodes = $includeVisitor->getNodes() ;
+				
+				$includepEntryBlock = new BasicBlock() ;
+				$includepEntryBlock->is_entry = true ;
+				$this->CFGBuilder($includeNodes,$condition,$includepEntryBlock,$includepNextBlock);
 			}
 			//Collect the require include_once include_once PHP file name in the node
 			$this->fileSummary->addIncludeToMap(NodeUtils::getNodeIncludeInfo($node)) ;
