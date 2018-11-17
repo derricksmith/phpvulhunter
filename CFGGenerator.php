@@ -705,17 +705,6 @@ class CFGGenerator{
 				case 'Expr_Eval':
 					$this->functionHandler($node, $block, $this->fileSummary);
 					break ;
-				case 'Expr_Include':
-					print_r($node);
-					
-					$traverser = new PhpParser\NodeTraverser;
-				    $visitor = new NodeFunctionVisitor() ;
-				    $visitor->block = $block;
-				    $visitor->fileSummary = $this->fileSummary;
-				    $visitor->cfgGen = new CFGGenerator();
-				    $traverser->addVisitor($visitor) ;
-				    $traverser->traverse(array($node)) ;
-					break;
 				default:
 				    $traverser = new PhpParser\NodeTraverser;
 				    $visitor = new NodeFunctionVisitor() ;
@@ -742,6 +731,7 @@ class CFGGenerator{
 		
 		//fileSummary of this file
 		global $JUMP_STATEMENT,$LOOP_STATEMENT,$STOP_STATEMENT,$RETURN_STATEMENT ;
+		
 		$currBlock = new BasicBlock() ;
 		
 		//Create a side of a CFG node
@@ -755,9 +745,14 @@ class CFGGenerator{
         if (!is_array($nodes)){
             $nodes = array($nodes);
         }
+		
+		case 'Expr_Include':
         
 		//Iterate each AST node
 		foreach($nodes as $node){
+			if ($node->getType() == 'Expr_Include'){
+				$this->CFGBuilder($nodes,$condition,$pEntryBlock,$pNextBlock);
+			}
 			//Collect the require include_once include_once PHP file name in the node
 			$this->fileSummary->addIncludeToMap(NodeUtils::getNodeIncludeInfo($node)) ;
 			print_R($this->fileSummary);
