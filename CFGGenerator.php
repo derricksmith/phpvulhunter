@@ -513,7 +513,8 @@ class CFGGenerator{
 		* @param fileSummary $fileSummary current file summary
 	*/
 	public function functionHandler($node, $block, $fileSummary){  
-	    echo "Calling Function.... CFGGenerator::functionHandler<br />";
+	    echo "<pre>";
+		echo "Calling Function.... CFGGenerator::functionHandler<br />";
 		//Find the sink function of the phase type according to the scan type specified by the user
 	    global $scan_type;
 	    //Get the name of the function called to determine whether it is a sink call
