@@ -558,12 +558,13 @@ class CFGGenerator{
 	        //If not sink call, start process analysis
 	        echo "THis is a class method <br />";
 			$context = Context::getInstance() ;
-            $funcBody = $context->getClassMethodBody(
+            print_r($this->fileSummary->getIncludeMap());
+			$funcBody = $context->getClassMethodBody(
             	$funcName,
             	$this->fileSummary->getPath(),
             	$this->fileSummary->getIncludeMap()
 	        );
-			 
+			
 			print_R($funcBody);
 
 			//check
