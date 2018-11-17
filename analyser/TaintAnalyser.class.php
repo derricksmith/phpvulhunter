@@ -663,7 +663,7 @@ class TaintAnalyser {
 	        //$block_list = $this->pathArr ;
 	        //array_push($block_list, $block) ;
 	        //Processing of multiple basic blocks
-	        //$this->pathArr = array() ;
+	        $this->pathArr = array() ;
 	        $this->multiBlockHandler($block, $argName, $node, $fileSummary) ;
 	        $this->multiFileHandler($block, $argName, $node, $fileSummary);
 	    }
