@@ -706,7 +706,7 @@ class CFGGenerator{
 					$this->functionHandler($node, $block, $this->fileSummary);
 					break ;
 				case 'Expr_Include':
-					
+					echo $node->expr->value;
 					$includeVisitor = new NodeVisitor() ;
 					$includeLexer = new PhpParser\Lexer(array(
 							'usedAttributes' => array(
