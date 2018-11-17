@@ -257,6 +257,7 @@ class CFGGenerator{
 					echo "type = right <br />";
 		            $funcName = NodeUtils::getNodeFunctionName($part) ;
 					echo "Function Name = ".$funcName."<br />";
+					print_R($part);
 		            BIFuncUtils::assignFuncHandler($part, $type, $dataFlow, $funcName) ;
 		            if($dataFlow->getValue() != null){
 		                //If the function assignment is processed, it will return immediately
