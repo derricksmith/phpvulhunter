@@ -698,7 +698,6 @@ class CFGGenerator{
 				// Handle function calls and calls to class methods
 				// Interprocess analysis and stain analysis
 				case 'Expr_MethodCall':
-				case 'Expr_Include':
                 case 'Expr_StaticCall':
 				case 'Stmt_Echo':
 				case 'Expr_Print':
@@ -706,6 +705,17 @@ class CFGGenerator{
 				case 'Expr_Eval':
 					$this->functionHandler($node, $block, $this->fileSummary);
 					break ;
+				case 'Expr_Include':
+					print_r($node);
+					
+					$traverser = new PhpParser\NodeTraverser;
+				    $visitor = new NodeFunctionVisitor() ;
+				    $visitor->block = $block;
+				    $visitor->fileSummary = $this->fileSummary;
+				    $visitor->cfgGen = new CFGGenerator();
+				    $traverser->addVisitor($visitor) ;
+				    $traverser->traverse(array($node)) ;
+					break;
 				default:
 				    $traverser = new PhpParser\NodeTraverser;
 				    $visitor = new NodeFunctionVisitor() ;
