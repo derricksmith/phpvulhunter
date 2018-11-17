@@ -714,7 +714,7 @@ class CFGGenerator{
 					));
 					$includeParser = (new PhpParser\ParserFactory)->create(PhpParser\ParserFactory::PREFER_PHP7, $includeLexer);
 					$includeTraverser = new PhpParser\NodeTraverser ;
-					$includeCode = file_get_contents($node->expr->value);
+					$includeCode = file_get_contents($node->value);
 					$includeStmts = $includeParser->parse($includeCode) ;
 					$includeTraverser->addVisitor($includeVisitor) ;
 					$includeTraverser->traverse($inlcudeStmts) ;
