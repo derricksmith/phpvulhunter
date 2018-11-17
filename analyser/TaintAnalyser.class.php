@@ -299,6 +299,7 @@ class TaintAnalyser {
 		                        $res = $this->isSanitization($type, $target, $saniArr, $encodingArr) ;
 								echo "res = ".$res."<br />";
 		                        if($res == true){
+									echo "res = True<br />";
 		                            return "safe" ;
 		                        }
 		                    }
