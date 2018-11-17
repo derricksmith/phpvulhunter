@@ -659,7 +659,7 @@ class TaintAnalyser {
 	    }else{
 	        //$path = $fileSummary->getPath() ;
 	        //Get the precursor basic block set and add the current base amount to the list
-	        //$this->getPrevBlocks($block) ;
+	        $this->getPrevBlocks($block) ;
 	        //$block_list = $this->pathArr ;
 	        //array_push($block_list, $block) ;
 	        //Processing of multiple basic blocks
