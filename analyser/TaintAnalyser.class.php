@@ -292,11 +292,12 @@ class TaintAnalyser {
 								echo "Flow Location = Object<br />";
 		                        $target = $flow->getLocation() ;
 		                        $type = TypeUtils::getTypeByFuncName(NodeUtils::getNodeFunctionName($node)) ;
-								echo "Type =".$type."<br />";
+								echo "Type = ".$type."<br />";
 		                        $encodingArr = $target->getEncoding() ;
 		                        $saniArr =  $target->getSanitization() ;
-		                    
+								
 		                        $res = $this->isSanitization($type, $target, $saniArr, $encodingArr) ;
+								echo "res = ".$res."<br />";
 		                        if($res == true){
 		                            return "safe" ;
 		                        }
